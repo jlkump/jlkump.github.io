@@ -1,0 +1,212 @@
+<!DOCTYPE HTML>
+<!--
+	Solid State by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Godot Exploration - Landon Kump</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="../assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Page Wrapper -->
+			<div id="page-wrapper">
+
+				<!-- Header -->
+					<header id="header" class="alt">
+						<h1><a href="#">Projects</a></h1>
+						<nav>
+							<a href="#menu">Menu</a>
+						</nav>
+					</header>
+
+				<!-- Menu -->
+				<nav id="menu">
+					<div class="inner">
+						<h2>Menu</h2>
+						<ul class="links">
+							<li><a href="../index.html">Introduction</a></li>
+							<li><a href="../coding-projects.html">Projects</a></li>
+							<li><a href="../artistic-portfolio.html">Portfolio</a></li>
+							<li><a href="../contactinfo.html">Contact Me</a></li>
+						</ul>
+						<a href="#" class="close">Close</a>
+					</div>
+				</nav>
+
+				<!-- Wrapper -->
+					<section id="wrapper">
+						<header>
+							<div class="inner">
+								<h2>Godot Golem Fighter</h2>
+							</div>
+						</header>
+
+						<!-- Content -->
+							<div class="wrapper">
+								<div class="inner">
+
+									<h3 class="major">Overview</h3>
+									<p>
+										This project was done as a simple exploration into the
+										Godot game engine. Through this project, I became
+										more familiar with the Godot's syntax in C# as well
+										as with creating event systems to handle game interactions.
+										This project was also a chance to explore the creation of
+										pixel art assets for games, as all the art seen is hand
+										drawn and animated. 
+									</p>
+									<p>
+										A showcase of the game is shown below and beneath that, a
+										walkthrough of my process of understanding the Godot engine.
+									</p>
+										<img src="../images/godot-pixel-golem/GolemWalking.gif" alt="" />
+										 Enjoy! 
+									</p>
+									<p>
+										itch.io link: <a href="https://jkump1.itch.io/pixel-golem">https://jkump1.itch.io/pixel-golem</a>
+									</p>
+								</div>
+							</div>
+							<div class="wrapper style2">
+								<div class="inner">
+
+									<h3 class="major">Showcase</h3>
+									<iframe width="100%" height="600" src="https://www.youtube.com/embed/eq8NP4nfH9I?si=1FNIVDn5Tm7DIRkM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+								</div>
+							</div>
+							<div class="wrapper style3">
+								<div class="inner">
+									<h3 class="major">Process</h3>
+									<p>
+										For my game, I implemented a top-down pixel fighter with a character and randomly
+										spawning enemies in a small environment. I began first by drawing sprites 
+										for the player character. I knew I wanted to do a simple rpg-style fighter,
+										and I wanted a golem which would have various states of decay based on the health.
+										As such, I designed the character with this in mind (however, it did increase
+										the process of creating sprite animations three-fold).
+									</p>
+									<div class="row gtr-uniform">
+										<div class="col-4"><span class="image fit">
+											<figure><img src="../images/godot-pixel-golem/golem-standing-fullhealth.png" alt="" /></figure>
+										</span></div>
+										<div class="col-4"><span class="image fit">
+											<figure><img src="../images/godot-pixel-golem/golem-standing-2health.png" alt="" /></figure>
+										</span></div>
+										<div class="col-4"><span class="image fit">
+											<figure><img src="../images/godot-pixel-golem/golem-standing-1health.png" alt="" /></figure>
+											<p></p>
+										</span></div>
+									</div>
+									<p>
+										Next, I designed the enemies with art in a similar way, though they would
+										only have two states: activated and deactivated. In the active state, they
+										would be able to attack, but deactivated, they would stand still and be open 
+										to attack from the player.
+									</p>
+									<div class="row gtr-uniform">
+										<div class="col-6"><span class="image fit">
+											<figure><img src="../images/godot-pixel-golem/tablet-enemy-active.png" alt="" /></figure>
+										</span></div>
+										<div class="col-6"><span class="image fit">
+											<figure><img src="../images/godot-pixel-golem/tablet-enemy-deactive.png" alt="" /></figure>
+											<p></p>
+										</span></div>
+									</div>
+									<p>
+										Godot, while now supporting 3D games, was originally made for 2D and thus
+										it is quite easy to import sprite animations as a 2D sprite sheet. Godot organizes
+										the structure of a game in terms of scenes and nodes. Everything in the game is a node, whether it
+										be a 2D animated sprite, sound player, or collision shape. These nodes are composed
+										into trees of parent and child nodes, creating scenes. A scene could be
+										an entity such as the player or enemy, ui elements, or the environment itself. Any scene
+										that is created can be saved as, essentially, a prefab. This prefab can be used
+										in other scenes to easily create duplicates of the same object.
+									</p>
+									<p>
+										For my project, I created scenes for the player, enemy, main enviornment, as well as for
+										the UI elements and environment obstacles. 
+									</p>
+									<p>
+										Interaction with things in the game are handled by attaching scripts to nodes in a scene.
+										For handling all interactions, I used C# scripts on the main scene node. This node
+										acted as a manager of sorts, handling interactions and sending signals based
+										on the current game state. This ensured that no strange interactions occured,
+										such as the player being able to move the character in the pause menu or pause while dead.
+									</p>
+									<p>
+										The player character had their own script which would handle 
+										<code>CharacterInput</code> events, which would
+										either change the velocity of the character to move in the 
+										appropriate direction or have the character initiate an attack.
+									</p>
+									<p>
+										The character also emited its own signal when it attempted
+										an attack, which the main script would handle by seeing if the 
+										attack hit any enemies within the player's attack radius. If it
+										did, it would handle killing the enemies and giving the player
+										the appropriate number of points. Similarily, if the
+										player died, the main scene would recieve a signal and put
+										the gamestate in <code>Death</code>.
+									</p>
+									<p>
+										I created other assorted scenes for handling UI interaction
+										with similar signal passing as that above with the player character.
+										By seperating everything into destinct scenes and connecting them
+										using signals, it ensured that no strange or unexpected interactions
+										would occur, as well as greatly simpifying the code structure.
+									</p>
+									<div class="row gtr-uniform">
+										<div class="col-4"><span class="image fit">
+											<figure><img src="../images/godot-pixel-golem/health-pips-ui.png" alt="" /></figure>
+										</span></div>
+										<div class="col-4"><span class="image fit">
+											<figure><img src="../images/godot-pixel-golem/menu-ui.png" alt="" /></figure>
+										</span></div>
+										<div class="col-4"><span class="image fit">
+											<figure><img src="../images/godot-pixel-golem/pause-ui.png" alt="" /></figure>
+										</span></div>
+									</div>
+									<p>
+										While being a fairly simple game, the project was a fun exploration
+										into the Godot engine. It was interesting to see the differences
+										between Godot and a more heavyweight engine like Unreal, as it
+										was much easier to jump into Godot after having learned many
+										engine concepts from Unreal.
+									</p>
+
+								</div>
+							</div>
+
+					</section>
+
+				<!-- Footer - Contact Info -->
+				<section id="footer">
+					<div class="inner">
+						<h2 class="major">Contact Info and Links</h2>
+						<!-- <p>Below you can find my email available for professional communication, as well as my LinkedIn profile. </p> -->
+						<ul class="contact">
+							<li class="icon solid fa-envelope">lkump1@icloud.com</li>
+							<li class="icon brands fa-github"><a href="https://github.com/jlkump">https://github.com/jlkump</a></li>
+							<li class="icon brands fa-linkedin"><a href="https://www.linkedin.com/in/jonathan-kump-a73b7722b/">https://www.linkedin.com/in/jonathan-kump-a73b7722b/</a></li>
+							<li class="icon brands fa-artstation"><a href="https://www.artstation.com/landon_k">https://www.artstation.com/landon_k</a></li>
+						</ul>
+					</div>
+				</section>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="../assets/js/jquery.min.js"></script>
+			<script src="../assets/js/jquery.scrollex.min.js"></script>
+			<script src="../assets/js/browser.min.js"></script>
+			<script src="../assets/js/breakpoints.min.js"></script>
+			<script src="../assets/js/util.js"></script>
+			<script src="../assets/js/main.js"></script>
+	</body>
+</html>
