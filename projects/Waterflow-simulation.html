@@ -6,7 +6,7 @@
 -->
 <html>
 	<head>
-		<title>Water Simulation - Landon Kump</title>
+		<title>Screen-Space Water Renderer - Landon Kump</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="../assets/css/main.css" />
@@ -43,7 +43,7 @@
 					<section id="wrapper">
 						<header>
 							<div class="inner">
-								<h2>PIC/FLIP Water Simulation</h2>
+								<h2>Screen-Space Water Renderer</h2>
 							</div>
 						</header>
 
@@ -51,8 +51,30 @@
 							<div class="wrapper">
 								<div class="inner">
 									<p>
-										Project is in-progress. I will update with a full showcase and walkthrough
-										when complete.
+										The goal of this project was to explore 
+										water simulations and water
+										rendering using the OpenGL API and C++. For this, I gathered
+										papers and online articles on the subject, primarily drawing from
+										the GDC 2010 talk slides titled 
+										<a href="https://developer.download.nvidia.com/presentations/2010/gdc/Direct3D_Effects.pdf">
+											"Screen Space Fluid Rendering for Games"
+										</a> 
+										by Simon Green at NVIDIA. I also
+										drew upon 
+										Ten Minute Physics' 
+										<a href="https://youtu.be/XmzBREkK8kY?si=8lUgJCES6hdRJI9I">
+											YouTube video 
+										</a>
+										for the
+										physical simulation of particles, which unfortunately fell through,
+										as I encountered problems with physical simulation using a compute shader.
+										However, I think these problems are fixable and perhaps sometime in the future
+										I will focus solely on water physical sim to create a fuller 
+										simulated representation of water.
+									</p>
+									<p>
+										You can view the results in the video below. The process
+										for what I achieved is discussed in detail in the section following.
 									</p>
 									<p>
 										<p class="icon brands fa-github">  <a href="https://github.com/jlkump/opengl-waterflow">https://github.com/jlkump/opengl-waterflow</a></p>
@@ -61,14 +83,312 @@
 							</div>
 							<div class="wrapper style2">
 								<div class="inner">
-
 									<h3 class="major">Showcase</h3>
+									<iframe width="100%" height="700" src="https://www.youtube.com/embed/MIAm_noXHIc?si=oc4a-ABWd6086d28" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 								</div>
 							</div>
 							<div class="wrapper style3">
 								<div class="inner">
 									<h3 class="major">Process</h3>
-									
+									<p>
+										With any water simulation, it is important to pick out the representation of
+										the water itself. Water in real life is a continous form that changes
+										shape and can split off from the larger form in a spray. In any
+										computer simulation, computing over continous regions is very
+										expensive, involving integrations over some function of shape.
+										In order to get a fast implementation, we can instead discretize
+										over some region. Water discretization for computer graphics and
+										simulation comes in to main forms Eularian, or grid-based,
+										and Lagrangian, or particle based.
+									</p>
+									<p>
+										I started by creating a 2D visualizatoin of diffusion using a grid based
+										simulation, both to get familiar with water physics and to get familiar
+										with OpenGL's compute shaders. You can see a short video demonstration below.
+									</p>
+									<iframe width="100%" height="400" src="https://www.youtube.com/embed/C9DtT2yXxME?si=zkBnAVGGioiMIn-I" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+									<p>
+										Before going further with the simulation, I thought about how to render
+										the water once it was in 3D. For this, I realized that a particle
+										simulation might end up being easier and more realistic. With Eularian,
+										rending grid velocities in 3D would be fairly difficult, as the
+										simulation does not naturally have a distinction between air and water.
+									</p>
+									<p>
+										Instead, using a particle representation, the fluid is tracked
+										easily in the position and radius of a particle. For rendering,
+										this is where I found the GDC talk slides by Simon Green.
+										At a high level, the technique involves taking 
+										particles, which are rendered as sprites, and calculating their depth.
+										This depth is then smoothed to create the
+										appearance of a continous surface. Finally, the normals of
+										the water are extracted from the depth texture. With this,
+										traditional rendering techniques for shading, reflection, and 
+										refraction can be done.
+									</p>
+									<p>
+										In this step of the process, I began by creating an arbitrary set
+										of particle positions which I would then pass to a particle shader.
+										Since each particle would be the same screen-space quad and only the
+										position would vary between particles. For this, GPU instancing
+										does exactly what is needed, taking a generic set of vertices
+										and placing them at various different positions.
+									</p>
+									<p>
+										Next was depth rendering, which was primarily code from the slides,
+										although, I had to modify it slightly, as I wasn't rendering the
+										diffuse color of the particle. Also, I found I had some trouble
+										using a projection matrix on the world space position in the
+										fragment shader. For no clear reason, the result would black out the
+										whole sprite. Aside from that though, the results looked promising.
+										You'll notice that the center of the sprites have a darker color,
+										indicating that they are closer to the camera. This creates the
+										appearance of a 3D object from just screen-space sprites.
+									</p>
+									<div class="col-3"><span class="image fit">
+										<figure><img src="../images/waterflow/Depth-fix.png" alt="" /></figure>
+										<figcaption><h3></h3></figcaption></span>
+									</div>
+									<p>
+										Next was calculating the normals from the screen-space depth
+										texture (I held off on blending until I was sure normals were
+										correct). This was done in a fairly interesting way and is
+										the heart of the screen-space technique for fluid rendering
+										from the GDC talk. It is done by taking the view space position
+										of the current fragment and compariing it with the view
+										space positions of nearby fragments to create two vectors
+										that are orthognal to what the normal vector is. Doing this,
+										the normal is simply calculated as the cross product between
+										the two. The results are shown below.
+									</p>
+									<div class="row gtr-uniform">
+										<div class="col-6"><span class="image fit">
+											<figure><img src="../images/waterflow/waterflow-fixed-normals.png" alt="" /></figure>
+											<figcaption><h3></h3></figcaption></span>
+										</div>
+										<div class="col-6"><span class="image fit">
+											<figure><img src="../images/waterflow/Reflective-spheres.png" alt="" /></figure>
+											<figcaption><h3></h3></figcaption></span>
+										</div>
+									</div>
+									<p>
+										Next was blending the depth texture between their calculation and
+										the normal rendering. The slides recommended doing a
+										bilateral filter rather than a guassian filter, as it would
+										perserve the edges in the shape of the water, but
+										I found that this shader only added noise, as the small changes in
+										the normals between particles were perserved despite wanting them
+										to be blended together.
+									</p>
+									<div class="row gtr-uniform">
+										<div class="col-6"><span class="image fit">
+											<figure><img src="../images/waterflow/blend-radius-6.png" alt="" /></figure>
+											<figcaption><h3>Kernel Size of 13</h3></figcaption></span>
+										</div>
+										<div class="col-6"><span class="image fit">
+											<figure><img src="../images/waterflow/Blended-reflections.png" alt="" /></figure>
+											<figcaption><h3>Kernel 13 Render</h3></figcaption></span>
+										</div>
+										<div class="col-6"><span class="image fit">
+											<figure><img src="../images/waterflow/blend-radius-10.png" alt="" /></figure>
+											<figcaption><h3>Kernel Size of 21</h3></figcaption></span>
+										</div>
+										<div class="col-6"><span class="image fit">
+											<figure><img src="../images/waterflow/Blending-depth-18-slow.png" alt="" /></figure>
+											<figcaption><h3>Kernel 21 Render</h3></figcaption></span>
+										</div>
+									</div>
+									<p></p>
+									<p>
+										You can see, even despite the high kernel size, the blending
+										of the normals were sub-optimal. Not only that, but to achieve
+										decent end results, the kernel size had to be so large
+										that the performance suffered significantly. Thus,
+										I switched over to using a guassian filter which
+										blended the normals much better and resulted
+										in a better end image.
+									</p>
+									<div class="row gtr-uniform">
+										<div class="col-6"><span class="image fit">
+											<figure><img src="../images/waterflow/waterflow-documentation-blended-normals.png" alt="" /></figure>
+											<figcaption><h3></h3></figcaption></span>
+										</div>
+										<div class="col-6"><span class="image fit">
+											<figure><img src="../images/waterflow/waterflow-documentation-blended-reflection.png" alt="" /></figure>
+											<figcaption><h3></h3></figcaption></span>
+										</div>
+									</div>
+									<p>
+										While the gaussian filter improved the end result, I still had
+										some trouble when transitioning from larger particle sizes to smaller
+										particles at a distance. Here, the gaussian filter wasn't perfect
+										and there were some artifacts clearly visible on the surface normals. Below
+										you can see them on the cube normals and end render clearly.
+									</p>
+									<div class="row gtr-uniform">
+										<div class="col-6"><span class="image fit">
+											<figure><img src="../images/waterflow/smoothing-normals.png" alt="" /></figure>
+											<figcaption><h3></h3></figcaption></span>
+										</div>
+										<div class="col-6"><span class="image fit">
+											<figure><img src="../images/waterflow/watercube-big.png" alt="" /></figure>
+											<figcaption><h3></h3></figcaption></span>
+										</div>
+									</div>
+									<p>
+										I messed around with normals and the smoothing shader for a long
+										while without much progress. Things either were too slow or ended
+										up looking worse than before. I decided to take a break from
+										the rendering and begin the framework for simulation.
+									</p>
+									<p>
+										Since I wanted the results of the particle simulation to run quickly, I
+										decided to try using OpenGL's compute shaders for simulation. Shaders
+										work best with textures, as textures are stored in the memory of the
+										GPU. So, I had the positions of the particles stored in a texture
+										which would be directly passed to the particle renderer without needing
+										to copy any data through the bus to the CPU and back.
+									</p>
+									<p>
+										I encountered some problems with the compute shader, the biggest being
+										the passing of data between the CPU and GPU for the SSBO data. An
+										SSBO or Shared Storage Buffer Object is simply a struct that can hold
+										data for the shader. I originally implemented the passing of the
+										data through the SSBO, but found that the layout on the CPU
+										did not match the layout on the GPU. This led to strange
+										problems, as some of the information passed along
+										was the bounds for positions, which ended up forcing
+										every particle along some axis line.
+									</p>
+									<iframe width="100%" height="400" src="https://www.youtube.com/embed/2M7jEn1vDi4?si=zBqouGIMuQ-XyAJw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+									<p>
+										The solution was to simply use uniforms instead, which greatly simplified things
+										as I was also already familiar with them. The textures for position were then
+										represented in an <code>image2D</code> of <code>vec4</code>s, where the
+										texture x and y represented the ID of the particle and the vec4 was simply the
+										vector of position. I similarly represented velocities this way, making it easy
+										to index per particle. Finally, the I decided that the compute
+										shader workgroups would be divided so that each worker got exactly one particle.
+										The size of the particle texture I used in the demo below is 512 x 512.
+									</p>
+									<p>
+										Introducing gravity was fairly simple, as we pass in the timestep <code>deltaTime</code>
+										to the shader and perform implicit integration, calculating the new velocity
+										from the old and then calculating the new position. We then perform some
+										bounds checks to ensure that the position does not leave a bounding box,
+										and we have some simple falling water. 
+									</p>
+									<iframe width="100%" height="600" src="https://www.youtube.com/embed/PRF6q9AS5tA?si=mNDcS2yKzgpY7BLa" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+									<p>
+
+									</p>
+									<p>
+										With some superficial movement achieved, I returned to the problem of rendering 
+										the particles as water. It was clear that the shape of the particles was still being
+										maintained strongly, even despite the blending I was doing. After some thought, I
+										realized that the problem stemmed from my textures being too high in resolution
+										for the depth render. I was rendering at the full resolution of the window,
+										but my goal was to blend the textures, so resolution shouldn't have been so high.
+										By reducing the size of the textures to render to by half, I got significantly
+										better blending of the normals.
+									</p>
+									<div class="row gtr-uniform">
+										<div class="col-6"><span class="image fit">
+											<figure><img src="../images/waterflow/smoothing-normals-improved.png" alt="" /></figure>
+											<figcaption><h3></h3></figcaption></span>
+										</div>
+										<div class="col-6"><span class="image fit">
+											<figure><img src="../images/waterflow/reflection-refraction-alt.png" alt="" /></figure>
+											<figcaption><h3></h3></figcaption></span>
+										</div>
+									</div>
+									<p>
+										This result looks vastly better, with a surface that truly begins to look like
+										water (This is also helped by adding some refraction to the render). While
+										improved, there is still clearly something happening to the edges of the
+										surface normals. This again was a blending problem, one which turned
+										out to have a simple solution. Since I was rendering to texture, the
+										background color decided with <code>glClearColor</code> had been
+										set to some non-black color beforehand, which in turn was being
+										rendered for my depth texture. Simply setting this to <code>glClearColor(0,0,0,1)</code>
+										fixed things for the most part. I also had to discard depths of exactly zero to ensure
+										the background wasn't all black. The result was a much nicer blended
+										texture around the edges.
+									</p>
+									<div class="row gtr-uniform">
+										<div class="col-6"><span class="image fit">
+											<figure><img src="../images/waterflow/smoothing-normals-big-improvement.png" alt="" /></figure>
+											<figcaption><h3></h3></figcaption></span>
+										</div>
+										<div class="col-6"><span class="image fit">
+											<figure><img src="../images/waterflow/Final-water-cube.png" alt="" /></figure>
+											<figcaption><h3></h3></figcaption></span>
+										</div>
+									</div>
+									<p>
+										This is the end result for the rendering portion of the project. For simulation,
+										I attempted to implement the PIC/FLIP method for particle simulation 
+										(Particle In Cell and Fluid Implicit Particles). The essentially takes the best
+										of both worlds for water simulation, simulating advection and diffusion with particles,
+										but simulating projection (or incompressability) with a grid.
+									</p>
+									<p>
+										For the compute shader, I needed a representation of a grid that I could
+										transfer the particle velocities to. For this, there is an <code>image3D</code>
+										data type. However, there was also the problem that particles could have
+										the same position and thus blend their velocities in the image texture.
+										Since the compute workers are across multiple cores, using a lock is
+										necessary for keeping the shared data safe. Fine-grain locks
+										also make the most sense, as a coarse grain lock would
+										slow the calculations to a crawl. The implementation
+										requires the use of another texture of equal dimensions
+										with integer values to essentially act as the lock for each
+										texture position. This is another <code>image3D</code>,
+										but of <code>uint</code>s rather than <code>vec4</code>s. Each
+										image size I used was 512 x 512 x 512.
+									</p>
+									<div class="row gtr-uniform">
+										<div class="col-12"><span class="image fit">
+											<figure><img src="../images/waterflow/spin-lock-code-complete.png" alt="" /></figure>
+											<figcaption><h3></h3></figcaption></span>
+										</div>
+									</div>
+									<p>
+										While this ensured safety with accessing and transfering the velocities to and
+										from the grid, the actual calculation of the individual grid cells
+										ended up taking a significant hit on performance, likely due to
+										each worker having a loop of 512 cells to loop through while accessing
+										shared data. I also had problems getting divergence to be calculated
+										properly. Since I was having problems with this aspect and I had been working
+										on this project for a while, I decided to leave the project for now and
+										come back to it later.
+									</p>
+									<p>
+										In the future when I come back to the project, I believe that performance could be improved 
+										by having three passes of compute shaders. One for calculating velocity
+										and transfering that velocity to a grid texture, one for calculating divergence
+										and ensuring incompressability which then is transfered back to a grid of velocities.
+										Lastly, the third compute shader would just modify the positions based on velocity.
+									</p>
+									<p>
+										However, even with the calculations across multiple compute shaders, there
+										is still the problem of keeping particles a certain distance from each other,
+										which I currently don't see a simple way of doing efficiently without some
+										spatial data structure, which would be even more difficult to manage on the
+										GPU in GLSL. For this, it might be fundamentally impossible to do efficiently,
+										but I would still be eager to try anyways. At the very least, it will
+										help me learn more about designing complex shaders.
+									</p>
+									<p>
+										If you read through to the end, I hope you enjoyed seeing the progress
+										throughout this project. It was pretty fun to learn about different
+										fluid simulation techniques, both for rendering and for simulation.
+										This was also one of my larger personal projects to date, so I am
+										pretty happy with how things ended up turning out, especially
+										since everything was done in OpenGL and C++. Although, I think
+										for my next project, I will use something higher level to make
+										things easier, maybe Godot or Unreal.
+									</p>
 								</div>
 							</div>
 
