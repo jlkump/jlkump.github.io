@@ -1,0 +1,285 @@
+<!DOCTYPE HTML>
+
+<html>
+	<head>
+		<title>Inverse Kinematics - Jonathan Kump</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../assets/css/main.css" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+							<header id="header">
+								<div class="logo"><strong>IK Project</strong> - Jonathan Kump</div>
+								<ul class="icons">
+									<li><a href="https://github.com/jlkump" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+									<li><a href="../contact.html" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
+									<li><a href="https://www.artstation.com/landon_k" class="icon brands fa-artstation"><span class="label">Artstation</span></a></li>
+									<li><a href="https://medium.com/@landon2002" class="icon brands fa-medium-m"><span class="label">Medium</span></a></li>
+								</ul>
+							</header>
+
+							<!-- Content -->
+								<section>
+									<h1>Inverse Kinematics</h1>
+									<hr class="major" />
+
+									<h2>Overview</h2>
+									<p>
+										The goal of this project was to implement an Inverse Kinematics system into Godot using 
+										GDExtension that allowed for various bone lengths, number of bones, and number of IK chains.
+										I also had the goal of implementing rotational constraints for each bone joint, but
+										found many difficulties with the implementation. Despite that, I will still cover
+										the different approaches I used as well as the theoretical implementation.
+									</p>
+									<p>
+										So, first of all, what is Inverse Kinematics? 
+										Inverse Kinematics or IK is a way of animating a set of bones to have 
+										realistic placement and orientation given some target position.
+										This is really useful for the animation of limbs like hands and feet since it is much easier to give limbs 
+										a target position rather than define the rotations of each joint in a chain of bones.
+									</p>
+									<p>
+										My implementation uses FABRIK, a method defined in the paper 
+										<em>FABRIK: A fast, iterative solver for the Inverse Kinematics problem</em>
+										by Andreas Aristidou &amp; Joan Lasenby. Below is the showcase video and
+										following that is a walkthrough of my process and implementation.
+									</p>
+									<hr class="major" />
+									
+									<h2>Video Showcase</h2>
+									<section class="content">
+										<iframe width="100%" height="700" src="https://www.youtube.com/embed/Zg2xze1RmAc?si=fiqa94oSvYkWOczD" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+									</section>
+									<hr class="major" />
+
+									<h2>Process</h2>
+									<hr/>
+									<h3>FABRIK Method</h3>
+									<p>
+										To begin, we need an understanding of FABRIK, the method I used 
+										for my implementation of IK. FABRIK stands for Forward And Backward Reaching
+										Inverse Kinematics. It is actually a pretty simple
+										method and the name gives us a big hint on how the method works.
+										Namely, there is a forward-reaching and backward-reaching stage,
+										both of which have similar steps.
+									</p>
+									<div class="row gtr-50 gtr-uniform">
+										<div class="col-4">
+											<span class="image fit"><img src="../images/inverse-kinematics/fabrik-fig1-example.png" alt="" /></span>
+											<p>
+												Image from <em>FABRIK: A fast, iterative solver for the Inverse Kinematics problem</em>, figure 1.
+											</p>
+										</div>
+										<div class="col-8">
+											<p>
+												Firstly, we need a defined chain of bones and joints for a
+												model. I did this with some simple models made both in Godot
+												and Blender, but normally bones would be defined by an animation
+												rigger or modeler. For the sake of explanation, we consider
+												a chain of bones with only four joints. 
+											</p>
+											<blockquote>
+												Bones define how sections of a model 
+												will move relative to the changes in the bone orientation 
+												and positions, making moving model limbs easier since we don't
+												have to move every joint individually.
+											</blockquote>
+											<p>
+												The forward-reaching stage is fairly
+												straight-forward, with only two major steps:
+												First moving the end effector (the end joint of the bone chain) to the target position;
+												And second, adjusting previous joints, putting them back at the appropriate distance
+												from the bone before it.
+											</p>
+											<p>
+												The backward-reaching stage is just as simple,
+												with the process just being performed in reverse. First, the
+												first joint is placed back at the initial position before
+												performing IK. Then, the joints are adjusted in the same way,
+												conserving the distances between bone joints.
+											</p>
+											<p>
+												Lastly, both stages are performed multiple times until the end effector
+												is within some threshold of the target or an iteration maximum is reached.
+												That's the general idea, however, more specifically, before
+												we begin performing FABRIK, we first check to see if the target is
+												even within range. If it is, then perform FABRIK, otherwise, we
+												have the bones stretch towards the target (which doesn't require
+												the iterative approach above).
+											</p>
+											<p>
+												The image to the left comes from the FABRIK paper and showcases the 
+												forward-reaching stage of FABRIK. 
+											</p>
+										</div>
+									</div> 
+									<br/>
+									<hr/>
+									<h3>Godot Implementation</h3>
+									<p>
+										Now, understanding the method, we can discuss my implementation in GDExtension.
+										I initially planned to incorporate IK changes into Godot using the existing scene-tree 
+										hierarchy for transforms, but found that the result was fairly buggy. When I 
+										modified the transform data, it would not have the expected result. I 
+										think this was due to the scene-tree hierarchy enforcing transform updates to children
+										nodes after the positions were already in the correct spot.
+									</p>
+									<p>
+										To fix this, my system works outside of the Godot scene-tree, querying the position of
+										some list of <code><a href="https://docs.godotengine.org/en/stable/classes/class_node3d.html">Node3D</a></code>s 
+										(representing the joints), performing FABRIK, then updating
+										the global positions and orientations of the <code>Node3D</code>s when finished. Specifically,
+										this was implemented using a class called <code>InverseKinematicChain</code>, which 
+										derived from the Godot <code><a href="https://docs.godotengine.org/en/stable/classes/class_node.html">Node</a></code> 
+										class. The class can be configured with an input set of <code>Node3D</code>s which become the 
+										joint positions for the bones. The initial 
+										distances between the nodes are the initial distances between the joints and are 
+										kept constant. 
+									</p>
+									<div class="row gtr-50 gtr-uniform">
+										<div class="col-8">
+											<p>
+												With this, ik works, but only assuming that the ik chain doesn't move. 
+												If the chain were attached to some larger model, the chain would ignore the scene-tree 
+												hierarchy of transforms. To fix this, I simply put a marker node at the location of 
+												the chain's starting position and update the first joint's position to be 
+												placed at this node before each ik calculation. 
+											</p>
+											<p>
+												With that fixed, unconstrained IK finally works completely with arbitrary size and 
+												model hierarchies. To add in some more realistic movement, I have an IK controller 
+												class, which has some IK chains that it animates based on the movement of the player, 
+												extrapolating the speed of the movement of the player to predict joint placement. 
+												Also, I added a resting position to which the legs will try to return to if the movement 
+												has been still for some amount of time.
+											</p>
+											<p>
+												All these properties can be edited within the editor for ease of use, the appearance
+												of which is shown to the right.
+											</p>
+										</div>
+										<div class="col-4">
+											<span class="image fit">
+												<img src="../images/inverse-kinematics/Ik-chain-editor.png" alt="" />
+												<em> &nbsp;&nbsp;&nbsp; View of the IK tool in the Godot Editor.</em>
+											</span>
+										</div>
+									</div> 
+
+									<hr/>
+									<h3>Rotational Constraints</h3>
+									<div class="row gtr-50 gtr-uniform">
+										<div class="col-4">
+											<span class="image fit"><img src="../images/inverse-kinematics/fabrik-fig5-constraints.png" alt="" /></span>
+											<p>
+												Image from <em>FABRIK: A fast, iterative solver for the Inverse Kinematics problem</em>, figure 5.
+											</p>
+										</div>
+										<div class="col-8">
+											<p>
+												TODO: ...
+											</p>
+										</div>
+									</div> 
+								</section>
+
+						</div>
+					</div>
+
+
+				<!-- Sidebar -->
+				<div id="sidebar">
+					<div class="inner">
+						<!-- Menu -->
+							<nav id="menu">
+								<header class="major">
+									<h2>Menu</h2>
+								</header>
+								<ul>
+									<li><a href="../index.html">Homepage</a></li>
+									<li><a href="../artistic-portfolio.html">Artistic Portfolio</a></li>
+									<li>
+										<span class="opener">Code Projects</span>
+										<ul>
+											<li><a href="../projects/inverse-kinematics-godot.html"><strong>Inverse Kinematics</strong></a></li>
+											<li><a href="../projects/screen-space-water.html"><strong>Screen-Space Water Rendering</strong></a></li>
+											<li><a href="../projects/npr-brush-shader.html"><strong>NPR Brush Shader</strong></a></li>
+											<li><a href="../code-projects.html">More</a></li>
+										</ul>
+									</li>
+								</ul>
+							</nav>
+
+						<!-- Section -->
+							<section>
+								<header class="major">
+									<h2>Recent Code Projects</h2>
+								</header>
+								<div class="mini-posts">
+									<article>
+										<h4>Inverse Kinematics</h4>
+										<a href="inverse-kinematics-godot.html" class="image"><img src="../images/inverse-kinematics/ik-showcase-2.png" alt="" /></a>
+										<p>
+											Exploring Inverse Kinematics using the FABRIK method. 
+											Made using GDExtension and C++.
+										</p>
+									</article>
+									<article>
+										<h4>Screen-Space Water Rendering</h4>
+										<a href="screen-space-water.html" class="image"><img src="../images/waterflow/Final-water-cube.png" alt="" /></a>
+										<p>
+											Exploring a Screen-Space technique for rendering realistic water in real-time,
+											covered in a 2010 GDC talk by Simon Green. Made using OpenGL and C++.
+										</p>
+									</article>
+									<article>
+										<h4>NPR Brush Shader</h4>
+										<a href="npr-brush-shader.html" class="image"><img src="../images/npr-shader/Showcase.png" alt="" /></a>
+										<p>
+											Exploring NPR (Non-Photorealistic Rendering) techniques with
+											a custom post process shader aiming to create the effect of 
+											brushstrokes on a model in realtime. 
+											Made using OpenGL and C++.
+										</p>
+									</article>
+								</div>
+							</section>
+
+						<!-- Section -->
+							<section>
+								<header class="major">
+									<h2>Get in touch</h2>
+								</header>
+								<p>
+									If you would like to get in contact, please use the email below
+									or message me through Linked-In. 
+								</p>
+								<ul class="contact">
+									<li class="icon solid fa-envelope"><a href="lkump1@icloud.com">lkump1@icloud.com</a></li>
+									<li class="icon brands fa-linkedin"><a href="https://www.linkedin.com/in/jonathan-kump-a73b7722b/">Jonathan Kump</a></li>
+								</ul>
+							</section>
+					</div>
+				</div>
+				<!-- End of Sidebar -->
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="../assets/js/jquery.min.js"></script>
+			<script src="../assets/js/browser.min.js"></script>
+			<script src="../assets/js/breakpoints.min.js"></script>
+			<script src="../assets/js/util.js"></script>
+			<script src="../assets/js/main.js"></script>
+
+	</body>
+</html>
