@@ -1,0 +1,17 @@
+[package]
+name = "portfolio"
+authors = ["Landon Kump"]
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+clap = "4.5"
+gloo = "0.11"
+once_cell = "1.16.0"
+serde = { version = "1.0", features = ["derive"] }
+stylist = { version = "0.13", features = ["yew", "yew_use_style", "parser", "macros"] }
+yew = { version="0.21.0", features = ["csr"] }
+yew-router = "0.18"
+yew_icons = { version = "0.8.0", features = ["FeatherMenu", "BootstrapSunFill", "BootstrapMoonFill", "BootstrapGithub", "BootstrapEnvelopeFill", "BootstrapLinkedin", "FontAwesomeSolidArrowRight"] }
