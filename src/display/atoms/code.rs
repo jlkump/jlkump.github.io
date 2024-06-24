@@ -52,7 +52,7 @@ fn get_code_style() -> Style {
         code {
             font-family: "Source Code Pro", monospace;
             font-optical-sizing: auto;
-            font-weight: 400;
+            font-weight: bold;
             font-style: normal;
         }
 

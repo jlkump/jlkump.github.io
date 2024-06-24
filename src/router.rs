@@ -1,9 +1,9 @@
 use yew::prelude::*;
 use yew_router::prelude::*;
 
-use crate::display::pages::{home::Home, page_not_found::PageNotFound};
+use crate::display::pages::{blog::Blog, contact::Contact, home::Home, page_not_found::PageNotFound, portfolio::Portfolio};
 
-#[derive(Clone, Routable, PartialEq)]
+#[derive(Clone, Debug, Routable)]
 pub(crate) enum Route {
     #[at("/")]
     Home,
@@ -18,13 +18,20 @@ pub(crate) enum Route {
     NotFound,
 }
 
+impl PartialEq for Route {
+    fn eq(&self, other: &Self) -> bool {
+        match (self, other) {
+            _ => core::mem::discriminant(self) == core::mem::discriminant(other),
+        }
+    }
+}
+
 fn switch(routes: Route) -> Html {
-    // TODO: Redirect most routes if not logged-in
     match routes {
         Route::Home => html! { <Home/> },
-        Route::Portfolio => html! { <Redirect<Route> to={Route::Home} />},
-        Route::Contact => html! { <Redirect<Route> to={Route::Home} />},
-        Route::Blog { post } => html! { <Redirect<Route> to={Route::Home} />},
+        Route::Portfolio => html! { <Portfolio />},
+        Route::Contact => html! { <Contact />},
+        Route::Blog { post } => html! { <Blog />},
         Route::NotFound => html! { <PageNotFound/> },
     }
 }
@@ -36,7 +43,7 @@ pub struct Props;
 pub fn router(_: &Props) -> Html {
     html! {
         <BrowserRouter>
-            <Switch<Route> render={switch} /> // <- must be child of <BrowserRouter>
+            <Switch<Route> render={switch} />
         </BrowserRouter>
     }
 }

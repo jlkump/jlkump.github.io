@@ -14,4 +14,4 @@ serde = { version = "1.0", features = ["derive"] }
 stylist = { version = "0.13", features = ["yew", "yew_use_style", "parser", "macros"] }
 yew = { version="0.21.0", features = ["csr"] }
 yew-router = "0.18"
-yew_icons = { version = "0.8.0", features = ["FeatherMenu", "BootstrapSunFill", "BootstrapMoonFill", "BootstrapGithub", "BootstrapEnvelopeFill", "BootstrapLinkedin", "FontAwesomeSolidArrowRight"] }
+yew_icons = { version = "0.8.0", features = ["FeatherMenu", "BootstrapSunFill", "BootstrapMoonFill", "BootstrapGithub", "BootstrapEnvelopeFill", "BootstrapLinkedin", "FontAwesomeSolidArrowRight", "BootstrapSteam","HeroiconsMiniSolidHome"] }

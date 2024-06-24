@@ -5,6 +5,7 @@ use crate::display::theme::{use_theme, Theme};
 
 #[derive(Properties, PartialEq, Clone)]
 pub struct Props {
+    #[prop_or_default]
     pub children: Html,
     #[prop_or(150)]
     pub size: i32,

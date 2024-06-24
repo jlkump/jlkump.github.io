@@ -1,6 +1,7 @@
 use std::fs;
 
 use gloo::console::log;
+use post::PostProvider;
 use stylist::{yew::{styled_component, Global}, Style, StyleSource};
 use theme::{use_theme, Theme, ThemeProvider};
 use yew::prelude::*;
@@ -26,7 +27,6 @@ fn app() -> Html {
         <>
             <Global css={get_global_style(&theme)} />
             <Router />
-            <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
         </>
     }
 }
@@ -34,9 +34,11 @@ fn app() -> Html {
 #[function_component(Root)]
 fn root() -> Html {
     html! {
-        <ThemeProvider>
-            <App />
-        </ThemeProvider>
+        <PostProvider>
+            <ThemeProvider>
+                <App />
+            </ThemeProvider>
+        </PostProvider>
     }
 }
 
@@ -61,6 +63,8 @@ fn get_global_style(theme: &Theme) -> StyleSource {
         link_visited,
         scroll_bar,
         scroll_bar_hover,
+        button,
+        button_press,
         ..
     } = theme;
     format!(
@@ -104,10 +108,36 @@ fn get_global_style(theme: &Theme) -> StyleSource {
 
         h1 {{
             color: {h1};
+            font-family: "Rubik Mono One", monospace; 
+            font-weight: 400; 
+            font-style: normal; 
+            font-size: 7em;
+            text-align: center;
+            margin: 0px;
+            transform-style: flat;
         }}
         
         h2 {{
             color: {h2};
+        }}
+
+        .sub-header {{
+            font-family: "Rubik Mono One", monospace; 
+            font-weight: 400; 
+            font-style: normal; 
+            text-align: center;
+            font-size: 2em;
+            margin-top: 10px;
+            transform-style: flat;
+        }}
+
+        @media screen and (max-width: 800px) {{
+            h1 {{
+                font-size: 4em;
+            }}
+            .sub-header {{
+                font-size: 3em;
+            }}
         }}
 
         h3 {{
@@ -140,6 +170,30 @@ fn get_global_style(theme: &Theme) -> StyleSource {
 
         a:visited {{
             color: {link_visited};
+        }}
+
+        button {{
+            color: {text_default};
+            padding: 10px;
+            border-radius: 5px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+            background: transparent;
+            outline: none;
+            font-size: 1em;
+            font-weight: bold;
+            border: 4px solid {button};
+        }}
+
+        button:hover {{
+            box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 10px 0 rgba(0,0,0,0.19);
+        }}
+
+        button:active {{
+            box-shadow: none;
+            transition-duration: 0.0s;
+            color: {button_press};
+            border: 4px solid {button_press};
         }}
     "#
     ).try_into().unwrap()
