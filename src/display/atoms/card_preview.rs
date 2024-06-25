@@ -93,7 +93,6 @@ pub fn card_preview(props: &Props) -> Html {
         @media screen and (max-width: 800px) {
             width: 14rem;
             height: 14rem;
-
         }
     "#, 
     text=theme.text_default, 
@@ -103,7 +102,7 @@ pub fn card_preview(props: &Props) -> Html {
     html! {
         <div class={classes!(style, props.class.clone())} style={props.style.clone()}>
             <img src={props.img.clone()} alt={format!("Image for {} card", props.title.clone())} />
-            <div class="card-content">
+            <div>
                 <h2>{props.title.clone()}</h2>
                 if let Some(text) = props.text.clone() {
                 <p>{text}</p>

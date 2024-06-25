@@ -39,10 +39,7 @@ pub fn contact(_: &Props) -> Html {
     html! {
         <div class={style}>
             <PageHeader />
-            <AnimatedBanner size=200><h1 style="margin-top: 40px;">{"Contact"}</h1></AnimatedBanner>
-            // <SlantDisplay bg_color={theme.panel_color_primary.clone()}>
-            //     <h3 style="font-size: 3.5em; margin: 0; text-align: center;">{"Contact"}</h3>
-            // </SlantDisplay>
+            <AnimatedBanner><h1 style="margin-top: 40px;">{"Contact"}</h1></AnimatedBanner>
             <div class="contact" style="padding-top: 20px; padding-bottom: 60px;">
                 <div style="display: flex; justify-content: space-evenly; align-items: center;">
                     <a href="https://www.linkedin.com/in/jonathan-kump-a73b7722b/">

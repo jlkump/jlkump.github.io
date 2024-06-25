@@ -7,7 +7,7 @@ use crate::display::theme::{use_theme, Theme};
 pub struct Props {
     #[prop_or_default]
     pub children: Html,
-    #[prop_or(150)]
+    #[prop_or(200)]
     pub size: i32,
     #[prop_or(20)]
     pub layer: i32,

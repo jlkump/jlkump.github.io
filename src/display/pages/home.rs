@@ -18,6 +18,7 @@ pub fn home() -> Html {
                 margin-bottom: 30px;
                 padding-top: 20px;
                 padding-bottom: 20px;
+                width: 100vw;
             }
 
             .card-holder > div {
@@ -96,21 +97,22 @@ pub fn home() -> Html {
                 <h1>{"Landon Kump"}</h1>
                 <h2 class="sub-header">{"Graphics Programmer"}</h2>
             </AnimatedBanner>
-            <SlantDisplay bg_color={theme.panel_color_primary.clone()}>
+            <SlantDisplay bg_color={theme.panel_color_secondary.clone()} is_left=false style="display: flex; flex-direction: column; align-items: center; padding-top: 20px; padding-bottom: 35px;">
                 <h3 style="font-size: 3.5em; margin: 0; text-align: center;">{"Projects"}</h3>
+                <div class={"card-holder"}>
+                    {for get_project_display(*posts)}
+                </div>
+                <Link<Route> to={Route::Contact}><button style="z-index: 4;">{"See All"}</button></Link<Route>>
             </SlantDisplay>
-            <div class={"card-holder"}>
-                {for get_project_display(*posts)}
-            </div>
             <SlantDisplay bg_color={theme.panel_color_primary.clone()} style="display: flex; flex-direction: column; align-items: center; padding-top: 20px; padding-bottom: 35px;">
                 <h3 style="font-size: 3.5em; margin: 0; text-align: center;">{"About"}</h3>
                 <div class="about-container">
                     <div class="about">
                         <p>
-                            {"I am a recent CS graduate from the University of Texas at Austin, specializing in game programming and graphics. A story-teller and worldbuilder at heart, I aim to bring the best experience possible to players, captivating them with stunning visuals and completely immersing them in other worlds."}
+                            {"I am a recent CS graduate from the University of Texas at Austin, specializing in game programming and graphics. A story-teller and worldbuilder at heart, I aim to bring the best experience possible to players, captivating them with stunning visuals and completely immersing them in other worlds. In particular, I enjoy the technical aspects of game development, including engine development, graphics, physics, and networking."}
                         </p>
                         <p style="align-content: middle;">
-                            {"To that end, I have studied throughly in graphics with personal projects in both all major engines and with lower-level software, such as OpenGL and CUDA. I have also programmed for and directed the publishing of "}<a href="https://store.steampowered.com/app/2962650/Banana_Cowboy/">{"Banana Cowboy on Steam"}<Icon icon_id={IconId::BootstrapSteam} style="vertical-align: middle; margin-left: 4px;"/></a>{" on an inter-disciplinary team of  talented students. I am looking for the next step on my path to express my creativity and problem solving skills in a challenging environement!"}
+                            {"To that end, I have studied throughly with personal projects in all major engines as well as in lower-level software, such as OpenGL and CUDA. I have also programmed for and directed the publishing of "}<a href="https://store.steampowered.com/app/2962650/Banana_Cowboy/">{"Banana Cowboy on Steam"}<Icon icon_id={IconId::BootstrapSteam} style="vertical-align: middle; margin-left: 4px;"/></a>{" with a team of talented inter-disciplinary students. Having completed my degree, I am now looking to work further on challenging projects. If you're looking for a dedicated and innovative programmer to bring your next project or idea to life, I'd love to connect. Get in touch and let's make it happen!"}
                         </p>
                     </div>
                     <img class="profile" src="/images/Profile-picture.png" />

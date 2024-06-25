@@ -1,10 +1,21 @@
-use std::ops::Deref;
+use std::{collections::HashMap, ops::Deref};
 
 use once_cell::sync::Lazy;
 use stylist::yew::styled_component;
 use yew::prelude::*;
 
 use crate::router::Route;
+
+// TODO: 
+// [ ]. Read-in post md and construct html and put it in the Post struct
+// [ ]. Put other data from md file into post struct as well
+static POST_MD_PATHS: Lazy<Vec<&'static str>> = Lazy::new(|| vec![
+    "inverse-kinematics-godot.md"
+]);
+
+static SHOWCASE_POSTS: Lazy<Vec<&'static str>> = Lazy::new(|| vec![
+    "inverse-kinematics-godot.md"
+]);
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Post {
@@ -14,6 +25,12 @@ pub struct Post {
     pub invert_showcase_text: bool,
     pub route: Route,
     pub md_path: String,
+}
+
+#[derive(Debug, PartialEq, Clone)]
+pub struct PostData {
+    posts: HashMap<String, Post>,
+    showcase_posts: Vec<String>,
 }
 
 #[derive(Debug, PartialEq, Clone)]

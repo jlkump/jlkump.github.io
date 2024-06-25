@@ -943,6 +943,7 @@ dependencies = [
  "once_cell",
  "serde",
  "stylist",
+ "web-sys",
  "yew",
  "yew-router",
  "yew_icons",

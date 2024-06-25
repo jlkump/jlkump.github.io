@@ -133,10 +133,10 @@ fn get_global_style(theme: &Theme) -> StyleSource {
 
         @media screen and (max-width: 800px) {{
             h1 {{
-                font-size: 4em;
+                font-size: 3.5em;
             }}
             .sub-header {{
-                font-size: 3em;
+                font-size: 2.5em;
             }}
         }}
 
@@ -173,27 +173,27 @@ fn get_global_style(theme: &Theme) -> StyleSource {
         }}
 
         button {{
-            color: {text_default};
-            padding: 10px;
-            border-radius: 5px;
+            color: {button};
+            padding: 15px;
+            border-radius: 10px;
             transition-duration: 0.4s;
             cursor: pointer;
             background: transparent;
             outline: none;
-            font-size: 1em;
+            font-family: "Rubik Mono One", monospace; 
+            font-size: 2em;
             font-weight: bold;
             border: 4px solid {button};
         }}
 
         button:hover {{
-            box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 10px 0 rgba(0,0,0,0.19);
+            color: {button_press};
+            border: 4px solid {button_press};
+            background: rgba(0, 0, 0, 0.15);
         }}
 
         button:active {{
-            box-shadow: none;
-            transition-duration: 0.0s;
-            color: {button_press};
-            border: 4px solid {button_press};
+            box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 10px 0 rgba(0,0,0,0.19);
         }}
     "#
     ).try_into().unwrap()
