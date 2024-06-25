@@ -18,3 +18,4 @@ by Andreas Aristidou & Joan Lasenby. Below is the showcase video and following t
 ## Process
 ### FABRIK Method
 To begin, we need an understanding of FABRIK, the method I used for my implementation of IK. FABRIK stands for Forward And Backward Reaching Inverse Kinematics. It is actually a pretty simple method and the name gives us a big hint on how the method works. Namely, there is a forward-reaching and backward-reaching stage, both of which have similar steps.
+<img src="/images/inverse-kinematics/fabrik-fig1-example.png" alt="Inverse Kinematics Figure Example" title="Image from <em>FABRIK: A fast, iterative solver for the Inverse Kinematics problem</em>, figure 1." />

@@ -70,7 +70,7 @@ pub fn art_display(props: &Props) -> Html {
 
         .art-display:hover {
             transition: box-shadow 0.3s ease-in;
-            box-shadow: 0 10px 30px 5px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 10px 5px rgba(0, 0, 0, 0.2);
         }
 
         .art-display:hover h2 {

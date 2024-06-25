@@ -3,7 +3,7 @@ use stylist::{yew::styled_component, Style};
 
 #[derive(Properties, PartialEq)]
 pub struct Props {
-    pub code: String,
+    pub children: Html,
     #[prop_or(None)]
     pub starting_line_num: Option<i32>, // Use NONE when there are no line numbers
     #[prop_or_default]
@@ -33,9 +33,9 @@ pub fn code_snippet(props: &Props) -> Html {
 fn get_code_block(props: &Props) -> Html {
     html! {
         if let Some(language) = &props.language {
-            <code class={format!("language-{}", language)}>{props.code.clone()}</code>
+            <code class={format!("language-{}", language)}>{props.children.clone()}</code>
         } else {
-            <code>{props.code.clone()}</code>
+            <code>{props.children.clone()}</code>
         }
     }
 }

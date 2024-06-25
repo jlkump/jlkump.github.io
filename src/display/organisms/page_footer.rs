@@ -10,14 +10,13 @@ pub struct Props {
 
 #[styled_component(PageFooter)]
 pub fn page_footer(props: &Props) -> Html {
-    let blog = Route::Blog { post: "".to_string() };
     let style = css!(
         r#"
             display: flex; 
             justify-content: space-evenly; 
             align-items: center;
             padding-top: 20px; 
-            padding-bottom: 20px;
+            padding-bottom: 60px;
 
             @media screen and (max-width: 800px) {
                 flex-direction: column;
@@ -34,7 +33,7 @@ pub fn page_footer(props: &Props) -> Html {
                     link_text="Go To Home Page"
                 />
             }
-            if props.exclude != blog {
+            if props.exclude != Route::BlogNav {
                 <CardPreview img="/images/npr-shader/Showcase.png" 
                     style="margin: 10px;"
                     title={"Projects"}

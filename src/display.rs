@@ -47,10 +47,13 @@ fn get_global_style(theme: &Theme) -> StyleSource {
         text_default,
         text_invert,
         text_colored,
+        text_highlight,
         gradient_dark,
         gradient_light,
         paper,
         paper_secondary,
+        panel_color_dark,
+        panel_color_accent,
         h1,
         h2,
         h3,
@@ -60,7 +63,8 @@ fn get_global_style(theme: &Theme) -> StyleSource {
         hr,
         link,
         link_hover,
-        link_visited,
+        link_invert,
+        link_hover_invert,
         scroll_bar,
         scroll_bar_hover,
         button,
@@ -80,6 +84,10 @@ fn get_global_style(theme: &Theme) -> StyleSource {
             background-repeat: no-repeat;
             background-attachment: fixed;
             height: 100vh;
+
+            font-family: "DM Serif Display", serif;
+            font-weight: 400;
+            font-style: normal;
 
             -webkit-user-select: none; /* Safari */
             -ms-user-select: none; /* IE 10 and IE 11 */
@@ -133,7 +141,7 @@ fn get_global_style(theme: &Theme) -> StyleSource {
 
         @media screen and (max-width: 800px) {{
             h1 {{
-                font-size: 3.5em;
+                font-size: 3em;
             }}
             .sub-header {{
                 font-size: 2.5em;
@@ -141,10 +149,18 @@ fn get_global_style(theme: &Theme) -> StyleSource {
         }}
 
         h3 {{
+            font-size: 3.5em; 
+            text-align: center;
+            margin-top: 5px; 
+            margin-bottom: 5px; 
             color: {h3};
         }}
 
         h4 {{
+            font-size: 1.5em; 
+            text-indent: 40px;
+            margin-top: 2.5px; 
+            margin-bottom: 2.5px; 
             color: {h4};
         }}
 
@@ -157,20 +173,56 @@ fn get_global_style(theme: &Theme) -> StyleSource {
         }}
 
         hr {{
-            color: {hr};
+            border: 0px;
+            border-top: 5px double {hr};
+            margin-right: 10vw;
+            margin-left: 10vw;
         }}
 
-        a {{
+        p {{
+            font-size: 1.5em;
+            text-indent: 20px;
+        }}
+
+        blockquote {{
+            font-size: 1.5em;
+            margin-left: 30px;
+            border-style: solid;
+            border-width: 0px 0px 0px 15px;
+            padding: 10px;
+            border-color: {panel_color_accent};
+            background: {panel_color_dark};
+            color: {text_invert};
+            font-family: "DM Serif Display", serif;
+            font-weight: 400;
+            font-style: italic;
+        }}
+
+        a, a:visited {{
             color: {link};
+            text-decoration: none;
         }}
 
-        a:hover {{
+        a:hover, a:hover:visited {{
             color: {link_hover};
         }}
 
-        a:visited {{
-            color: {link_visited};
+        code {{
+            font-family: "Source Code Pro", monospace;
+            font-optical-sizing: auto;
+            font-weight: bold;
+            font-style: normal;
+            color: {text_colored};
         }}
+
+        blockquote a {{
+            color: {link_invert} !important;
+        }}
+
+        blockquote a:hover {{
+            color: {link_hover_invert} !important;
+        }}
+
 
         button {{
             color: {button};
@@ -194,6 +246,60 @@ fn get_global_style(theme: &Theme) -> StyleSource {
 
         button:active {{
             box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 10px 0 rgba(0,0,0,0.19);
+        }}
+
+        ::-moz-selection {{
+            color: {text_invert};
+            background: {text_highlight};
+        }}
+
+        ::selection {{
+            color: {text_invert};
+            background: {text_highlight};
+        }}
+
+        .blog-content {{
+            padding: 50px;
+            -webkit-user-select: text; /* Safari */
+            -ms-user-select: text; /* IE 10 and IE 11 */
+            user-select: text; /* Standard syntax */
+        }}
+
+        .blog-content hr {{
+            border-top: 3px dashed {h4}; 
+            margin: 70px 0 20px 0;
+        }}
+
+        .split {{
+            display: flex;
+            flex-wrap: wrap;
+        }}
+
+        .media-display {{
+            width: 60vw; 
+            height: 500px;
+        }}
+
+        @media screen and (max-width: 800px) {{
+            .blog-content {{
+                padding: 20px;
+            }}
+            .media-display {{
+                width: 80vw; 
+                height: 300px;
+            }}
+        }}
+
+        .references {{
+            padding: 20px;
+        }}
+
+        .references a {{
+            color: {link_invert};
+        }}
+
+        .references li {{
+            font-size: 1.5em;
         }}
     "#
     ).try_into().unwrap()

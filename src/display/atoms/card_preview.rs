@@ -69,6 +69,7 @@ pub fn card_preview(props: &Props) -> Html {
             transition: opacity 0.3s ease-out;
         }
         & p {
+            font-size: 1.25em;
             inset: auto auto 60px 30px;
         }
         & a {

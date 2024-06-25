@@ -6,16 +6,9 @@ use yew::prelude::*;
 
 use crate::router::Route;
 
-// TODO: 
-// [ ]. Read-in post md and construct html and put it in the Post struct
-// [ ]. Put other data from md file into post struct as well
-static POST_MD_PATHS: Lazy<Vec<&'static str>> = Lazy::new(|| vec![
-    "inverse-kinematics-godot.md"
-]);
+use super::{pages::blog::BlogPost, theme::Theme};
 
-static SHOWCASE_POSTS: Lazy<Vec<&'static str>> = Lazy::new(|| vec![
-    "inverse-kinematics-godot.md"
-]);
+mod data;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Post {
@@ -24,58 +17,56 @@ pub struct Post {
     pub showcase_img: String,
     pub invert_showcase_text: bool,
     pub route: Route,
-    pub md_path: String,
+    html_fn: fn(&Context<BlogPost>, &Theme) -> Html,
+}
+
+impl Post {
+    fn new(
+        title: &str, 
+        brief: &str, 
+        showcase_img: &str, 
+        invert_showcase_text: bool, 
+        route: Route,
+        html_fn: fn(&Context<BlogPost>, &Theme) -> Html,
+    ) -> Post {
+        Post { title: title.to_string(), brief: brief.to_string(), showcase_img: showcase_img.to_string(), invert_showcase_text, route, html_fn}
+    }
+
+    pub fn get_post_html(&self, ctx: &Context<BlogPost>, theme: &Theme) -> Html {
+        (self.html_fn)(ctx, theme)
+    }
 }
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct PostData {
-    posts: HashMap<String, Post>,
-    showcase_posts: Vec<String>,
+    pub posts: HashMap<String, Post>,
+    pub showcase_posts: Vec<String>,
+}
+
+impl PostData {
+    pub fn get(&self, post: &str) -> Option<&Post> {
+        self.posts.get(post)
+    }
 }
 
 #[derive(Debug, PartialEq, Clone)]
 pub(crate) struct PostContext {
-    inner: UseStateHandle<&'static Vec<Post>>,
+    inner: UseStateHandle<&'static PostData>,
 }
 
-fn get_posts() -> &'static Vec<Post> {
-    static POSTS: Lazy<Vec<Post>> = Lazy::new(|| vec![
-        Post { 
-            title: "Custom Npr Shader".to_string(), 
-            brief: "Exploring NPR (Non-Photorealistic Rendering) techniques with a custom post process shader aiming to create the effect of brushstrokes on a model in realtime. Made using OpenGL and C++.".to_string(), 
-            showcase_img: "/images/npr-shader/Showcase.png".to_string(),
-            invert_showcase_text: false,
-            route: Route::Blog { post: "Opengl-NPR-Brush-Shader" .to_string()}, 
-            md_path: "/projects/npr-brush-shader.md".to_string(),
-        },
-        Post { 
-            title: "Inverse Kinematics".to_string(), 
-            brief: "Exploring Inverse Kinematics using the FABRIK method. Made using GDExtension and C++.".to_string(),
-            showcase_img: "/images/inverse-kinematics/ik-showcase.png".to_string(),
-            invert_showcase_text: true, 
-            route: Route::Blog { post: "Godot-Inverse-Kinematics" .to_string()}, 
-            md_path: "/projects/inverse-kinematics-godot.md".to_string(),
-        },
-        Post { 
-            title: "Water Rendering".to_string(), 
-            brief: "Exploring a Screen-Space technique for rendering realistic water in real-time, covered in a 2010 GDC talk by Simon Green. Made using OpenGL and C++.".to_string(),
-            showcase_img: "/images/waterflow/Final-water-cube.png".to_string(),
-            invert_showcase_text: true, 
-            route: Route::Blog { post: "Opengl-Water-Rendering" .to_string()}, 
-            md_path: "/projects/opengl-water-rendering.md".to_string(),
-        },
-    ]);
+fn get_posts() -> &'static PostData {
+    static POSTS: Lazy<PostData> = Lazy::new(|| data::get_post_data());
     &POSTS
 }
 
 impl PostContext {
-    pub fn new(inner: UseStateHandle<&'static Vec<Post>>) -> Self {
+    fn new(inner: UseStateHandle<&'static PostData>) -> Self {
         Self { inner }
     }
 }
 
 impl Deref for PostContext {
-    type Target = &'static Vec<Post>;
+    type Target = &'static PostData;
 
     fn deref(&self) -> &Self::Target {
         &self.inner

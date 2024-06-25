@@ -3,7 +3,7 @@ use yew_icons::{Icon, IconId};
 use stylist::yew::styled_component;
 use yew_router::components::Link;
 
-use crate::{display::{atoms::{card_preview::CardPreview, slant_display::SlantDisplay}, organisms::{animated_banner::AnimatedBanner, page_header::PageHeader}, post::{use_posts, Post}, theme::use_theme}, router::Route};
+use crate::{display::{atoms::{card_preview::CardPreview, slant_display::SlantDisplay}, organisms::{animated_banner::AnimatedBanner, page_header::PageHeader}, post::{use_posts, PostData}, theme::use_theme}, router::Route};
 
 #[styled_component(Home)]
 pub fn home() -> Html {
@@ -56,11 +56,6 @@ pub fn home() -> Html {
                 margin-bottom: 20px;
             }
 
-            .about > p {
-                font-size: 1.5em;
-                text-indent: 20px;
-            }
-
             .contact > p {
                 font-size: 1.5em;
             }
@@ -102,12 +97,12 @@ pub fn home() -> Html {
                 <div class={"card-holder"}>
                     {for get_project_display(*posts)}
                 </div>
-                <Link<Route> to={Route::Contact}><button style="z-index: 4;">{"See All"}</button></Link<Route>>
+                <Link<Route> to={Route::Blog { post: "".to_string()}}><button style="z-index: 4;">{"See All"}</button></Link<Route>>
             </SlantDisplay>
             <SlantDisplay bg_color={theme.panel_color_primary.clone()} style="display: flex; flex-direction: column; align-items: center; padding-top: 20px; padding-bottom: 35px;">
                 <h3 style="font-size: 3.5em; margin: 0; text-align: center;">{"About"}</h3>
                 <div class="about-container">
-                    <div class="about">
+                    <div class="blog-content">
                         <p>
                             {"I am a recent CS graduate from the University of Texas at Austin, specializing in game programming and graphics. A story-teller and worldbuilder at heart, I aim to bring the best experience possible to players, captivating them with stunning visuals and completely immersing them in other worlds. In particular, I enjoy the technical aspects of game development, including engine development, graphics, physics, and networking."}
                         </p>
@@ -159,12 +154,10 @@ pub fn home() -> Html {
     }
 }
 
-fn get_project_display(posts: &Vec<Post>) -> Vec<Html> {
+fn get_project_display(posts: &PostData) -> Vec<Html> {
     let mut res = vec![];
-    for post in posts {
-        if res.len() >= 3 {
-            break;
-        } else {
+    for post in &posts.showcase_posts {
+        if let Some(post) = posts.posts.get(post) {
             res.push(
                 html! {
                     <CardPreview img={post.showcase_img.clone()} 

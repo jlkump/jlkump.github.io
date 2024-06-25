@@ -1,7 +1,7 @@
 use yew::prelude::*;
 use yew_router::prelude::*;
 
-use crate::display::pages::{blog::Blog, contact::Contact, home::Home, page_not_found::PageNotFound, portfolio::Portfolio};
+use crate::display::pages::{blog::{Blog, BlogNavigation}, contact::Contact, home::Home, page_not_found::PageNotFound, portfolio::Portfolio};
 
 #[derive(Clone, Debug, Routable)]
 pub(crate) enum Route {
@@ -11,11 +11,22 @@ pub(crate) enum Route {
     Portfolio,
     #[at("/Contact")]
     Contact,
+    #[at("/Blog")]
+    BlogNav,
     #[at("/Blog/:post")]
     Blog { post: String },
     #[not_found]
     #[at("/404")]
     NotFound,
+}
+
+impl Route {
+    pub fn try_blog_string(&self) -> Option<&str> {
+        match self {
+            Route::Blog { post } => Some(&post),
+            _ => None,
+        }
+    }
 }
 
 impl PartialEq for Route {
@@ -31,7 +42,8 @@ fn switch(routes: Route) -> Html {
         Route::Home => html! { <Home/> },
         Route::Portfolio => html! { <Portfolio />},
         Route::Contact => html! { <Contact />},
-        Route::Blog { post } => html! { <Blog />},
+        Route::Blog { post } => html! { <Blog {post}/> },
+        Route::BlogNav => html! { <BlogNavigation /> },
         Route::NotFound => html! { <PageNotFound/> },
     }
 }
