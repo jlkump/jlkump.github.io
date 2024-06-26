@@ -94,6 +94,7 @@ pub fn home() -> Html {
             </AnimatedBanner>
             <SlantDisplay bg_color={theme.panel_color_secondary.clone()} is_left=false style="display: flex; flex-direction: column; align-items: center; padding-top: 20px; padding-bottom: 35px;">
                 <h3 style="font-size: 3.5em; margin: 0; text-align: center;">{"Projects"}</h3>
+                <hr/>
                 <div class={"card-holder"}>
                     {for get_project_display(*posts)}
                 </div>
@@ -101,6 +102,7 @@ pub fn home() -> Html {
             </SlantDisplay>
             <SlantDisplay bg_color={theme.panel_color_primary.clone()} style="display: flex; flex-direction: column; align-items: center; padding-top: 20px; padding-bottom: 35px;">
                 <h3 style="font-size: 3.5em; margin: 0; text-align: center;">{"About"}</h3>
+                <hr/>
                 <div class="about-container">
                     <div class="blog-content">
                         <p>
@@ -116,6 +118,7 @@ pub fn home() -> Html {
             </SlantDisplay>
             <SlantDisplay bg_color={theme.panel_color_secondary.clone()} is_left=false>
                 <h3 style="font-size: 3.5em; margin: 0; text-align: center;">{"Artistic Portfolio"}</h3>
+                <hr/>
                 <div class={"card-holder"}>
                     <CardPreview img="/images/personal-art/Digital-Fracture.png" 
                         class={css!("margin: 10px;")}
@@ -135,6 +138,7 @@ pub fn home() -> Html {
             </SlantDisplay>
             <SlantDisplay bg_color={theme.panel_color_primary.clone()}>
                 <h3 style="font-size: 3.5em; margin: 0; text-align: center;">{"Contact"}</h3>
+                <hr/>
             </SlantDisplay>
             <div class="contact" style="padding-top: 20px; padding-bottom: 60px;">
                 <div style="display: flex; justify-content: space-evenly; align-items: center;">

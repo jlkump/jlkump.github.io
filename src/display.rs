@@ -141,10 +141,10 @@ fn get_global_style(theme: &Theme) -> StyleSource {
 
         @media screen and (max-width: 800px) {{
             h1 {{
-                font-size: 3em;
+                font-size: 2.5em;
             }}
             .sub-header {{
-                font-size: 2.5em;
+                font-size: 2em;
             }}
         }}
 

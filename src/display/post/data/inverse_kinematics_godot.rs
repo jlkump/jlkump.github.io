@@ -94,7 +94,7 @@ pub fn page(ctx: &Context<BlogPost>, theme: &Theme) -> Html {
                     </p>
                     <div class="split">
                         <div style="flex: 50%;">
-                            <Image src="/images/inverse-kinematics/fabrik-fig5-constraints.png" href="#ref-fabrik" ref_text="Image from FABRIK: A fast, iterative solver for the Inverse Kinematics problem, figure 5."/>
+                            <Image src="/images/inverse-kinematics/fabrik-fig5-constraints.png" href="#ref-fabrik" ref_text="Image from FABRIK: A fast, iterative solver for the Inverse Kinematics problem, figure 5." height="36rem"/>
                         </div>
                         <div style="flex: 50%;">
                         <p>
@@ -112,9 +112,59 @@ pub fn page(ctx: &Context<BlogPost>, theme: &Theme) -> Html {
                             </p>
                         </div>
                         <div style="flex: 50%;">
-                            <Image src="/images/inverse-kinematics/fabrik-fig4-range-of-motion.png" />
+                            <Image src="/images/inverse-kinematics/fabrik-fig4-range-of-motion.png" href="#ref-fabrik" ref_text="Image from FABRIK: A fast, iterative solver for the Inverse Kinematics problem, figure 4."/>
                         </div>
                     </div>
+                    <p>
+                        {"I haven't gone over how to determine if the point is within the range of motion or how to project the point onto the cone if it is. The basic idea is that the point is transformed to the space with "}<code>{"O"}</code>{" as the origin, then the equation of elipse that makes up the quadrant the point is within is solved for with the point's "}<code>{"x"}</code>{","}<code>{"y"}</code>{" values. If the value is "}<code>{"1"}</code>{", then the point is outside the range of motion."} 
+                    </p>
+                    <p>
+                        {"For determining the projection onto the cone, the paper solves the eclipse equation and line equation (from the origin to the point). This is done by using the Newton-Raphson method reference from another paper (Sung Joon Ahn, Wolfgang Rauh, Hans-Jnrgen Warnecke, "}<em>{"Least-squares orthogonal distances fitting of circle, sphere, ellipse, hyperbola, and parabola"}</em>{", Pattern Recognition 34, 2001). The method seemed overkill to me, especially since FABRIK is already an approximation, so I came up with two alternatives."}
+                    </p>
+                    <div class="split">
+                        <div style="flex: 50%;">
+                            <Image src="/images/inverse-kinematics/approach-1-diagram.png" alt="Inverse Kinematics Drawn Diagram - Approach 1" width="32rem"/>
+                        </div>
+                        <div style="flex: 50%;">
+                            <p>
+                                {"The first alternative method was to pick points along the line, performing essentially a binary search to see if the point was inside or outside the eclipse, progressively getting closer to the edge of the eclipse."}
+                            </p>
+                            <p>
+                                {"In the figure, the dark red and blue dots are the axis maximums, the light red and blue dots are the projection of the point onto the axes, and the green elispe is the range of motion."}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="split">
+                        <div style="flex: 50%;">
+                            <p>
+                                {"The second approach was to project the axis maximum onto the line from the origin to the target. This was far more approximate but should still work."}
+                            </p>
+                            <p>
+                                {"In the figure to the right, again, the dark red and blue dots are the axis maximums, the light red and blue dots are the projection of the point onto the axes, and the green elispe is the range of motion."}
+                            </p>
+                        </div>
+                        <div style="flex: 50%;">
+                            <Image src="/images/inverse-kinematics/approach-2-diagram.png" alt="Inverse Kinematics Drawn Diagram - Approach 2" width="34rem"/>
+                        </div>
+                    </div>
+
+                    <div class="split">
+                        <div style="flex: 40%;">
+                            <iframe width="100%" height="515" src="https://www.youtube.com/embed/oD5Y2-G0xqE?si=7QoPYW11kRMS9tjl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=true></iframe>
+                        </div>
+                        <div style="flex: 50%; padding-left: 20px;">
+                            <Image src="/images/inverse-kinematics/ik-constraints-drawn-visualization.png" alt="" />
+                            <p>
+                                <code>{"z"}<sub>{"p"}</sub></code>{" and "}<code>{"x"}<sub>{"p"}</sub></code>{" are the projected points of point "}<code>{"p"}<sub>{"i"}</sub></code>{" onto the axes for the basis of constraints."}
+                            </p>
+                        </div>
+                    </div>
+                    <p>
+                        {"With either approach, I still had problem with rotational constraints working properly. For debugging, I made a visualization that showed the axes of the constrained bones as well as the maximum points for the rotational constraints and the projection of the point onto the axes. Visually, everything seemed to be in order (I used rotational constraints of 45 degrees in each axis). However, the bone chain acted wildly whenever the constraints were enforced."}
+                    </p>
+                    <p>
+                        {"While working on the project, I thought these problems were coming from solving for the projection onto the cone incorrectly and thus I spent a lot of time trying to fix this problem. However, every approach I took still came up with the same problem. After finishing the project, I believe the problem was actually with the spin of the bones, as the \"up\" direction of the basis for the bone joint constraints would change every frame (when constrained),  thus making the constrainted point position change rapidly. I think I will return to attempt IK in a later project, though I think I might try using a different framework than Godot or use Godot's built-in bones. This way, I might be able to get things to work as expected, as many of my problems in this project came from conflicts between what I expected to happen and how Godot wanted things to work."}
+                    </p>
                 </div>
 
             </SlantDisplay>
