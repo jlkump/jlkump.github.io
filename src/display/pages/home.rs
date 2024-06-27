@@ -128,7 +128,7 @@ pub fn home() -> Html {
                         link_text="View full portfolio"
                         route={Route::Portfolio}
                     />
-                    <CardPreview img="/images/personal-art/Digital-magic-aura.png" 
+                    <CardPreview img="/images/personal-art/Digital-Magic-Aura.png" 
                         class={css!("margin: 10px;")}
                         invert=true
                         title="Node" 
