@@ -6,8 +6,14 @@ use yew_router::components::Link;
 use crate::router::Route;
 
 
+#[derive(Properties, PartialEq)]
+pub struct Props {
+    #[prop_or(false)]
+    pub should_scroll_top: bool
+}
+
 #[styled_component(PageHeader)]
-pub fn page_header() -> Html {
+pub fn page_header(props: &Props) -> Html {
     let style = css!(r#"
             display: flex;
             
@@ -24,9 +30,12 @@ pub fn page_header() -> Html {
                 z-index: 3;
             }
     "#);
+    let should_scroll_top = props.should_scroll_top;
     use_effect_with((),
-        |_| {
-            scroll_to_top();
+        move |_| {
+            if should_scroll_top {
+                scroll_to_top();
+            }
     });
     html! {
         <div class={style}>

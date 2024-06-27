@@ -87,20 +87,20 @@ pub fn home() -> Html {
     let posts = use_posts();
     html! {
         <div class={style} style="overflow-x: hidden;">
-            <PageHeader />
+            <PageHeader should_scroll_top=true/>
             <AnimatedBanner class={css!("padding-top: 0px; padding-bottom: 40px;")} size=250>
                 <h1>{"Landon Kump"}</h1>
                 <h2 class="sub-header">{"Graphics Programmer"}</h2>
             </AnimatedBanner>
-            <SlantDisplay bg_color={theme.panel_color_secondary.clone()} is_left=false style="display: flex; flex-direction: column; align-items: center; padding-top: 20px; padding-bottom: 35px;">
+            <SlantDisplay bg_color={theme.panel_color_secondary.clone()} is_left=false style="display: flex; flex-direction: column; padding-top: 20px; padding-bottom: 35px;">
                 <h3 style="font-size: 3.5em; margin: 0; text-align: center;">{"Projects"}</h3>
                 <hr/>
                 <div class={"card-holder"}>
                     {for get_project_display(*posts)}
                 </div>
-                <Link<Route> to={Route::Blog { post: "".to_string()}}><button style="z-index: 4;">{"See All"}</button></Link<Route>>
+                <Link<Route> to={Route::BlogNav} classes={css!("align-self: center;")}><button style="z-index: 4;">{"See All"}</button></Link<Route>>
             </SlantDisplay>
-            <SlantDisplay bg_color={theme.panel_color_primary.clone()} style="display: flex; flex-direction: column; align-items: center; padding-top: 20px; padding-bottom: 35px;">
+            <SlantDisplay bg_color={theme.panel_color_primary.clone()} style="display: flex; flex-direction: column; padding-top: 20px; padding-bottom: 35px;">
                 <h3 style="font-size: 3.5em; margin: 0; text-align: center;">{"About"}</h3>
                 <hr/>
                 <div class="about-container">
@@ -114,7 +114,8 @@ pub fn home() -> Html {
                     </div>
                     <img class="profile" src="/images/Profile-picture.png" />
                 </div>
-                <Link<Route> to={Route::Contact}><button style="z-index: 4;">{"Get In Touch!"}</button></Link<Route>>
+                
+                <Link<Route> to={Route::Contact} classes={css!("align-self: center;")}><button style="z-index: 4;">{"Get In Touch!"}</button></Link<Route>>
             </SlantDisplay>
             <SlantDisplay bg_color={theme.panel_color_secondary.clone()} is_left=false>
                 <h3 style="font-size: 3.5em; margin: 0; text-align: center;">{"Artistic Portfolio"}</h3>
@@ -138,7 +139,6 @@ pub fn home() -> Html {
             </SlantDisplay>
             <SlantDisplay bg_color={theme.panel_color_primary.clone()}>
                 <h3 style="font-size: 3.5em; margin: 0; text-align: center;">{"Contact"}</h3>
-                <hr/>
             </SlantDisplay>
             <div class="contact" style="padding-top: 20px; padding-bottom: 60px;">
                 <div style="display: flex; justify-content: space-evenly; align-items: center;">

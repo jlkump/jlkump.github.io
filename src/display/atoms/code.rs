@@ -1,6 +1,8 @@
 use yew::prelude::*;
 use stylist::{yew::styled_component, Style};
 
+use crate::display::theme::{use_theme, Theme};
+
 #[derive(Properties, PartialEq)]
 pub struct Props {
     pub children: Html,
@@ -16,14 +18,14 @@ pub struct Props {
 
 #[styled_component(CodeSnippet)]
 pub fn code_snippet(props: &Props) -> Html {
-    
+    let theme = use_theme();
     html! {
         if let Some(line_num) = props.starting_line_num {
-            <pre class={classes!(format!("prettyprint linenums:{}", line_num), props.class.clone(), get_code_style())} style={props.style.clone()}>
+            <pre class={classes!(format!("prettyprint linenums:{}", line_num), props.class.clone(), get_code_style(&theme))} style={props.style.clone()}>
                 {get_code_block(props)}
             </pre>
         } else {
-            <pre class={classes!("prettyprint", get_code_style(), props.class.clone())} style={props.style.clone()}>
+            <pre class={classes!("prettyprint", get_code_style(&theme), props.class.clone())} style={props.style.clone()}>
                 {get_code_block(props)}
             </pre>
         }
@@ -40,7 +42,7 @@ fn get_code_block(props: &Props) -> Html {
     }
 }
 
-fn get_code_style() -> Style {
+fn get_code_style(theme: &Theme) -> Style {
     Style::new(
     r#"
         /* SPAN elements with the classes below are added by prettyprint. */

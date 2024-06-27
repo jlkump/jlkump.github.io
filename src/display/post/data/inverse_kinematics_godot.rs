@@ -1,7 +1,7 @@
 use yew::prelude::*;
 use yew_icons::{Icon, IconId};
 
-use crate::{display::{atoms::{code::CodeSnippet, image_display::Image, slant_display::SlantDisplay}, organisms::{animated_banner::AnimatedBanner, page_footer::PageFooter, page_header::PageHeader}, pages::blog::BlogPost, post::data::BlogTemplate, theme::Theme}, router::Route};
+use crate::display::{atoms::{image_display::Image, slant_display::SlantDisplay}, pages::blog::BlogPost, post::data::BlogTemplate, theme::Theme};
 
 
 pub fn page(ctx: &Context<BlogPost>, theme: &Theme) -> Html {

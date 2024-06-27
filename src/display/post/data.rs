@@ -8,6 +8,8 @@ use crate::{display::{atoms::slant_display::SlantDisplay, organisms::{animated_b
 use super::{Post, PostData};
 
 mod inverse_kinematics_godot;
+mod screen_space_water;
+mod npr_brush_shader;
 
 #[derive(Properties, PartialEq)]
 struct Props {
@@ -38,7 +40,9 @@ fn blog_template(props: &Props) -> Html {
 
 pub fn get_post_data() -> PostData {
     let post_list = vec![
-        inverse_kinematics_godot_post()
+        inverse_kinematics_godot_post(),
+        screen_space_water_post(),
+        npr_brush_shader_post(),
     ];
     let mut posts = HashMap::new();
     let mut showcase_posts = vec![];
@@ -63,5 +67,28 @@ fn inverse_kinematics_godot_post() -> Post {
         true, 
         Route::Blog { post: "Godot-Inverse-Kinematics" .to_string()},
         inverse_kinematics_godot::page,
+    )
+}
+
+fn screen_space_water_post() -> Post {
+    Post::new(
+        "Screen-Space Water Rendering", 
+        "Exploring a Screen-Space technique for rendering realistic water in real-time, covered in a 2010 GDC talk by Simon Green. Made using OpenGL and C++.", 
+        "/images/waterflow/Final-water-cube.png", 
+        true,
+        Route::Blog { post: "Screen-Space-Water-Rendering" .to_string()},
+        screen_space_water::page,
+    )
+}
+
+
+fn npr_brush_shader_post() -> Post {
+    Post::new(
+        "NPR Brush Shader", 
+        "Exploring NPR (Non-Photorealistic Rendering) techniques with a custom post process shader aiming to create the effect of brushstrokes on a model in realtime. Made using OpenGL and C++.", 
+        "/images/npr-shader/Showcase.png", 
+        false,
+        Route::Blog { post: "NPR-Brush-Shader" .to_string()},
+        npr_brush_shader::page,
     )
 }

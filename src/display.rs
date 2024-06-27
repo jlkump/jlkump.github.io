@@ -165,6 +165,9 @@ fn get_global_style(theme: &Theme) -> StyleSource {
         }}
 
         h5 {{
+            font-size: 1.5em; 
+            margin-top: 2px; 
+            margin-bottom: 2px; 
             color: {h5};
         }}
 
@@ -213,6 +216,18 @@ fn get_global_style(theme: &Theme) -> StyleSource {
             font-weight: bold;
             font-style: normal;
             color: {text_colored};
+        }}
+
+        pre.prettyprint {{
+            border: 3px solid {panel_color_accent};
+            border-radius: 10px;
+            text-wrap: wrap;
+        }}
+
+        @media screen and (max-width: 800px) {{
+            code {{
+                font-size: 0.75em;
+            }}
         }}
 
         blockquote a {{
@@ -281,6 +296,9 @@ fn get_global_style(theme: &Theme) -> StyleSource {
         }}
 
         @media screen and (max-width: 800px) {{
+            .split {{
+                flex-direction: column;
+            }}
             .blog-content {{
                 padding: 20px;
             }}
@@ -297,7 +315,7 @@ fn get_global_style(theme: &Theme) -> StyleSource {
         .references a {{
             color: {link_invert};
         }}
-
+        
         .references li {{
             font-size: 1.5em;
         }}
