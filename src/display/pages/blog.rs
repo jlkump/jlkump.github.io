@@ -33,7 +33,7 @@ pub fn blog_navigation() -> Html {
         <div>
             <PageHeader />
             <AnimatedBanner><h1>{"Projects"}</h1></AnimatedBanner>
-            <SlantDisplay bg_color={theme.panel_color_primary.clone()} style="display: flex; flex-direction: column; align-items: center; padding-top: 20px; padding-bottom: 35px;">
+            <SlantDisplay bg_color={theme.panel_color_primary.clone()} style="display: flex; justify-content: space-evenly; flex-wrap: wrap; align-items: center; padding-top: 20px; padding-bottom: 35px;">
                 {get_project_display(&post_data)}
             </SlantDisplay>
             <SlantDisplay bg_color={theme.panel_color_secondary.clone()} is_left=false style="display: flex; flex-direction: column; align-items: center; padding-top: 20px; padding-bottom: 35px;">
