@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"    content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="author"      content="Landon Kump">
+	
+	<title>Screen-Space Water Rendering | Landon Kump</title>
+
+	<link rel="shortcut icon" href="assets/images/gt_favicon.png">
+	
+	<!-- Bootstrap -->
+	<link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.no-icons.min.css" rel="stylesheet">
+	<!-- Icon font -->
+	<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+	<!-- Fonts -->
+	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Alice|Open+Sans:400,300,700">
+	<!-- Custom styles -->
+	<link rel="stylesheet" href="/assets/css/styles.css">
+
+	<!--[if lt IE 9]> <script src="assets/js/html5shiv.js"></script> <![endif]-->
+</head>
+<body>
+
+<header id="header">
+	<div id="head" class="parallax" parallax-speed="1">
+        <h1 id="logo" class="text-center">
+            <div style="height: 100px;"></div>
+			<span class="title">Screen-Space Water Rendering | Landon Kump</span>
+            <div style="height: 100px;"></div>
+        </h1>
+	</div>
+
+	<nav class="navbar navbar-default navbar-sticky">
+		<div class="container-fluid">
+			
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar"> 
+					<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+				</button>
+			</div>
+
+			<div id="navbar" class="collapse navbar-collapse">
+				
+				<ul class="nav navbar-nav">
+					<li><a href="/index.html">Home</a></li>
+					<li><a href="/about.html">About</a></li>
+					<li><a href="/contact.html">Contact</a></li>
+					<li class="active"><a href="/projects.html">Projects</a></li>
+					<li><a href="/portfolio.html">Portfolio</a></li>
+				</ul>
+			
+			</div>
+		</div>	
+	</nav>
+</header>
+
+<main id="main">
+
+	<div class="container">
+
+		<div class="row topspace">
+			
+			<aside class="col-sm-4 sidebar sidebar-right">
+
+				<ul class="nav text-right nav-side">
+					<li><a href="#Overview">Overview</a></li>
+					<li><a href="#Video Showcase">Video Showcase</a></li>
+					<li><a href="#Process">Process</a></li>
+					<li><a href="#Cleanup">Cleanup</a></li>
+					<li><a href="#References">References</a></li>
+				</ul>
+
+			</aside>
+
+			<!-- Article main content -->
+			<article class="col-sm-8 maincontent">
+                <h2 id="Overview" class="page-title">Overview</h2><hr/>
+				<p>The goal of this project was to explore water simulations and water rendering using the OpenGL API and C++. For this, I gathered papers and online articles on the subject, primarily drawing from the GDC 2010 talk slides titled Screen Space Fluid Rendering for Games by Simon Green at NVIDIA<sup>[<a href="#ref-2">2</a>]</sup>. I also drew upon Ten Minute Physics' <a href="https://www.youtube.com/watch?si=8lUgJCES6hdRJI9I&v=XmzBREkK8kY&feature=youtu.be">YouTube video</a> for the physical simulation of particles, which I will cover in a different post.</p>
+				<p>Everything is done essentially from scratch, save for an OpenGL CMake build template I used as a basis for building the project. The template comes from Tomasz Galaj's OpenGL CMake tutorial How to setup OpenGL project with CMake<sup>[<a href="#ref-3">3</a>]</sup> (the tutorial no longer seems to be available sadly, but the github template is still available).</p>
+				<p>Below is a video showcase of my progress throughout the development of the water renderer. After that, I have a walkthrough of my process for development. Here is the <a href="https://github.com/jlkump/opengl-waterflow">Github link</a> for the project.</p>
+                
+                <h2 id="Video Showcase">Video Showcase</h2><hr/>
+                <iframe width="100%" height="500" src="https://www.youtube.com/embed/MIAm_noXHIc?si=7t0uoWxlvioESILt" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=true></iframe>
+                
+                <h2 id="Process">Process</h2><hr/>
+                <p>With any simulation, it is important to think about the representation for the object of simulation. Water in real life is a continous form that changes shape and can split off from the larger form in a spray. In any computer simulation, computing over continous regions is very expensive, involving integrations over some function of shape. In order to get a fast implementation, we can instead discretize over some region. Thus, for water simulation, there are two main approaches  called Eularian and Lagrangian based simulation, which are essentially just fancy names for grid-based and particle-based simulation respectively.</p>
+                <p>A Eularian-based simulation is somewhat difficult to visualize in 3D, especially for a realistic rendering, so instead, using a Lagrangian particle-based representation makes things much easier. For the actual simulation, the representation uses a mix of Eularian and Lagrangian which makes the simulation more efficient and more accurate, while the rendering just considers the particle-based representation.</p>
+                <p>I started by creating a 2D visualizatoin of diffusion using a Eularian grid-based simulation, both to get familiar with water physics and to get familiar with OpenGL's compute shaders. You can see a short video demonstration below.</p>
+
+                <iframe width="100%" height="400" src="https://www.youtube.com/embed/C9DtT2yXxME?si=zkBnAVGGioiMIn-I" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="allowfullscreen"></iframe>
+
+                <p>Since this was used to mainly get familiar with compute shaders and setup the project with OpenGL (and also because I was eager to do a 3d-based rendering) I quickly moved on to the 3d rendering and simulation.</p>
+                <blockquote>The technique used for simulation is called PIC/FLIP and is discussed in Animating Sand as a Fluid.<sup>[<a href="#ref-1">1</a>]</sup></blockquote>
+                <p>A particle-based rendering technique is discussed by Simon Green's talk, which, at a high level, involves taking particles, rendered as sprites, and calculating their depth. This depth is rendered to texture and smoothed to create the appearance of a continous surface. Finally, the normals are extracted from the depth texture and form the normals of the water itself. Having extracted the normals, we can perform traditional rendering techniques for shading, reflection, and refraction.</p>
+                <p>With that, in the following section I will cover my implementation of this high-level idea and any problems I encountered during my implementation.</p>
+                <h4>OpenGL Implementation</h4><hr/>
+                <p>There are four major steps in rendering the water. The first step is to render the particles as sprites with their depth rendered to texture. The second step is to perform a blend on the rendered texture. The third step is to extract normals from the blended depth texture. Lastly, we render the water using the Phong-illumination model.</p>
+                <h5>Step 1 - Depth Texture</h5>
+                <img src="/assets/images/waterflow/Depth-fix.png"/>
+                <p>In the first step, we need to render particle sprites at the positions of each particle. The positions are stored in a 2D texture for simulation on the GPU, so we take in the particle ids as UVs rather than positions in the rendering shader. I used GPU instancing for rendering the sprites since each particle renders the same 2D, screnn-space quad just at different positions on the screen. Rendering the depth, we can see the result to the left with a rectangular section of water.</p>
+                <blockquote>Instancing is a technique for rendering the same or very similar models many times without passing the same information across the bus to the GPU multiple times. A tutorial on how it is done can be found here.</blockquote>
+
+                <h5>Step 2 - Blended Depth</h5>
+                <p>The next step blends the depth texture, producing a new blended texture. For this, I used a Gaussian blur, although the talk recommends a Bilateral filter to perserve in the water holes in the resulting depth texture. I found that my bilateral filter did not blend the depth texture enough however, as shown to the right. The changes in color are just due to differences in how I rendered the normal vector.</p>
+                <div class="project-img-container">
+                    <div style="margin-bottom: 20px;" class="col-sm-4 project-img">
+                        <hr/>
+                        <div style="height: 90px"><strong>The normals as they are without blending, extracted directly from depth.</strong></div>
+                        <img src="/assets/images/waterflow/waterflow-fixed-normals.png"/>
+                    </div>
+                    <div style="margin-bottom: 20px;" class="col-sm-4 project-img">
+                        <hr/>
+                        <div style="height: 90px"><strong>The normals blended with a Bilateral filter, producing artifacts.</strong></div>
+                        <img src="/assets/images/waterflow/blend-radius-10.png"/>
+                    </div>
+                    <div style="margin-bottom: 20px;" class="col-sm-4 project-img">
+                        <hr/>
+                        <div style="height: 90px"><strong>The normals blended with a Gaussian filter with minor artifacts at the edges.</strong></div>
+                        <img src="/assets/images/waterflow/waterflow-documentation-blended-normals.png"/>
+                    </div>
+                </div>
+
+                <h5>Step 3 - Normal Extraction</h5>
+                <p>The next step extracts the normals from the depth texture, the result of which you can see in the pictures above. This step comes directly from Simon Green's talk and is the core of why it is an efficient screen-space rendering. Since we only consider the depth texture of a 2D rendering of water, we can quickly render an approximation of how the water should look if we extract the normals.</p>
+                <p>The normals are extracted with the following steps:</p>
+                <ul>
+                    <li>Calculating the view-space position (the slides call it eye-space) of the texel of water given the UV and depth. This is fairly straight-forward, simply taking the homogenous-space position from the UV and depth then multiplying by the inverse of the projection matrix. This is what it looks like in my shader:</li>
+                </ul>
+                <pre class="prettyprint"><code class="language-cpp">vec3 GetViewPos(vec2 tex_coord) {
+    vec4 hs_pos = vec4 (
+        2.0 * tex_coord.x - 1.0,
+        2.0 * tex_coord.y - 1.0,
+        2.0 * texture(depth_tex, tex_coord).r - 1.0,
+        1.0);
+    vec4 vs_pos = (inv_proj * hs_pos);
+    return vs_pos.xyz / vs_pos.w;
+}</code></pre>
+                <ul>
+                    <li>We then calculate the view-space position of nearby points in positive and negative x and y. We do this to get vectors that are tangent to the surface of the water based on the depth texture. It is an approximation, but allows us to get a fairly realistic normal by cross producting these two tangent vectors. I discarded any normals that were pointing directly in the Z axis in order to keep the background of the scene clear, however, a much better approach would have been to use a stencil buffer to render to only sections of the screen with water. The code I used is as follows:</li>
+                </ul>
+
+                <h5>Step 4 - Rendering</h5>
+                <p>With the normal extracted, the last step is simply rendering the water using some illumination model. I used Phong illumination with a cube-map to sample for rendering reflections and refractions. The results at various different steps are shown below.</p>
+                <div class="project-img-container">
+                    <div class="col-sm-6 project-img">
+                        <hr/>
+                        <div style="height: 90px"><strong>Water rendered in full without blending the depth texture.</strong></div>
+                        <img src="/assets/images/waterflow/Reflective-spheres.png"/>
+                    </div>
+                    <div class="col-sm-6 project-img">
+                        <hr/>
+                        <div style="height: 90px"><strong>Water rendered blending with a small radius size for Gaussian.</strong></div>
+                        <img src="/assets/images/waterflow/Blended-reflections.png"/>
+                    </div>
+                    <div class="col-sm-6 project-img">
+                        <hr/>
+                        <div style="height: 90px"><strong>Water rendering blending with a large radius size (18 texels) for Gaussian.</strong></div>
+                        <img src="/assets/images/waterflow/Blending-depth-18-slow.png"/>
+                    </div>
+                    <div class="col-sm-6 project-img">
+                        <hr/>
+                        <div style="height: 90px"><strong>Water rendering on a cube of water with small particle size.</strong></div>
+                        <img src="/assets/images/waterflow/watercube.png"/>
+                    </div>
+                </div>
+
+                <h2 id="Cleanup">Cleanup</h2><hr/>
+                <p>You'll notice in the pictures above, the water doesn't appear perfectly realistic. There are artifacts along the edges of the water and the particles are still fairly visible. There were two fixes I came up with for the artifact problem. The first was to simply render the depth texture at lower resolution. We can do this because accuracy isn't as much a concern as getting the water to look realistic. This ended up having a pretty significant improvement, which you can see going from the left picture to the right picture below.</p>
+
+                <div style="margin-bottom: 30px;" class="project-img-container">
+                    <div class="col-sm-6 project-img">
+                        <hr/>
+                        <div style="height: 90px"><strong>Rendering of normals as it was before with Guassian filter and a high resolution depth texture.</strong></div>
+                        <img src="/assets/images/waterflow/smoothing-normals.png"/>
+                    </div>
+                    <div class="col-sm-6 project-img">
+                        <hr/>
+                        <div style="height: 90px"><strong>Rendering with a lower resolution depth texture and Guassian filter. Much cleaner :)</strong></div>
+                        <img src="/assets/images/waterflow/smoothing-normals-improved.png"/>
+                    </div>
+                </div>
+
+                <p>The second fix, which solved the artifacts at the edge of the cube came when I examined the pictures above. The problem clearly came from blending, but the Gaussian filter was being applied properly. The actual problem was it was blending the background color of the image with the normals of the water. This was a fairly simply fix, simply ignoring any normals from the background which shouldn't be considered anyways. With that, you can see a big improvement to the render.</p>
+                <img src="/assets/images/waterflow/smoothing-normals-big-improvement.png"/>
+                <p></p>
+                <p>With that, we get a much nicer final render and all that's left is messing with the parameters for the illumination model to get a good looking effect. I messed with various appearances which you can see below.</p>
+                <div class="project-img-container">
+                    <div class="col-sm-4">
+                        <img src="/assets/images/waterflow/water-messing-with-color.png"/>
+                    </div>
+                    <div class="col-sm-4">
+                        <img src="/assets/images/waterflow/final-color-choice.png"/>
+                    </div>
+                    <div class="col-sm-4">
+                        <img src="/assets/images/waterflow/Final-water-cube.png"/>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <img src="/assets/images/waterflow/final-smoothing-appearance.png"/>
+                    </div>
+                    <div class="col-sm-4">
+                        <img src="/assets/images/waterflow/reflection-refraction-alt.png"/>
+                    </div>
+                    <div class="col-sm-4">
+                        <img src="/assets/images/waterflow/refraction-reflection-combined.png"/>
+                    </div>
+                </div>
+                <p></p>
+                <p></p>
+
+                <h2 id="References">References</h2><hr/>
+                <ol class="ref">
+                    <li><a id="ref-1" href="https://www.cs.ubc.ca/~rbridson/docs/zhu-siggraph05-sandfluid.pdf">Yongning Zhu, Robert Bridson. <em>Animating Sand as a Fluid</em>, 01 July 2005.</a></li>
+                    <li><a id="ref-2" href="https://developer.download.nvidia.com/presentations/2010/gdc/Direct3D_Effects.pdf">Simon Green. <em>GDC 2010 - Screen Space Fluid Rendering for Games</em>, 9-13 March 2010.</a></li>
+                    <li><a id="ref-3" href="https://github.com/tgalaj/OpenGLSampleCmake?tab=readme-ov-file">Tomasz Galaj, CMake OpenGL Boilerplate</a></li>
+                </ol>
+
+
+			</article>
+			<!-- /Article -->
+			
+
+		</div>
+	</div>	<!-- /container -->
+	
+</main>
+
+<footer id="footer" class="topspace">
+	<div class="container">
+		<div class="row section">
+			<div class="col-md-12">
+				<p class="lead text-center text-muted">“The purpose of a storyteller is not to tell you how to think, but to give you questions to think upon.” <a href="https://www.goodreads.com/book/show/7235533-the-way-of-kings"><em>-- The Way of Kings</em>, Brandon Sanderson</a></p>
+			</div>
+		</div> <!-- / section -->
+	</div>
+</footer>
+
+<footer id="underfooter">
+	<div class="container">
+		<div class="row">
+			
+			<div class="col-md-6 widget">
+				<div class="widget-body">
+					<p class="follow-me-icons">
+						<a href="https://www.linkedin.com/in/jonathan-kump-a73b7722b/"><i class="fa fa-linkedin fa-2"></i></a>
+						<a href="https://github.com/jlkump"><i class="fa fa-github fa-2"></i></a>
+					</p>
+				</div>
+			</div>
+
+			<div class="col-md-6 widget">
+				<div class="widget-body">
+					<p class="text-right">
+						Copyright &copy; 2024, Landon Kump<br> 
+						Design: <a href="http://www.gettemplate.com" rel="designer">Initio by GetTemplate</a> </p>
+				</div>
+			</div>
+
+		</div> <!-- /row of widgets -->
+	</div>
+</footer>
+
+
+
+<!-- JavaScript libs are placed at the end of the document so the pages load faster -->
+<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script src="/assets/js/template.js"></script>
+</body>
+</html>
