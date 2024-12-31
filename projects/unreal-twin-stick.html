@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"    content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="author"      content="Landon Kump">
+	
+	<title>Twin Stick Shooter | Landon Kump</title>
+
+	<link rel="shortcut icon" href="assets/images/gt_favicon.png">
+	
+	<!-- Bootstrap -->
+	<link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.no-icons.min.css" rel="stylesheet">
+	<!-- Icon font -->
+	<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+	<!-- Fonts -->
+	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Alice|Open+Sans:400,300,700">
+	<!-- Custom styles -->
+	<link rel="stylesheet" href="/assets/css/styles.css">
+
+	<!--[if lt IE 9]> <script src="assets/js/html5shiv.js"></script> <![endif]-->
+</head>
+<body>
+
+<header id="header">
+	<div id="head" class="parallax" parallax-speed="1">
+        <h1 id="logo" class="text-center">
+            <div style="height: 100px;"></div>
+			<span class="title">Twin Stick Shooter | Landon Kump</span>
+            <div style="height: 100px;"></div>
+        </h1>
+	</div>
+
+	<nav class="navbar navbar-default navbar-sticky">
+		<div class="container-fluid">
+			
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar"> 
+					<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+				</button>
+			</div>
+
+			<div id="navbar" class="collapse navbar-collapse">
+				
+				<ul class="nav navbar-nav">
+					<li><a href="/index.html">Home</a></li>
+					<li><a href="/about.html">About</a></li>
+					<li><a href="/contact.html">Contact</a></li>
+					<li class="active"><a href="/projects.html">Projects</a></li>
+					<li><a href="/portfolio.html">Portfolio</a></li>
+				</ul>
+			
+			</div>
+		</div>	
+	</nav>
+</header>
+
+<main id="main">
+
+	<div class="container">
+
+		<div class="row topspace">
+			
+			<aside class="col-sm-4 sidebar sidebar-right">
+
+				<ul class="nav text-right nav-side">
+					<li><a href="#Overview">Overview</a></li>
+					<li><a href="#Video Showcase">Video Showcase</a></li>
+				</ul>
+
+			</aside>
+
+			<!-- Article main content -->
+			<article class="col-sm-8 maincontent">
+                <h2 id="Overview" class="page-title">Overview</h2><hr/>
+                <p>For this project, me and a group of fellow students in our Game Programming class came together to work a game of our own design. We had been working in Unreal throughout the semester, learning how to navigate and build for large scale applications. Each of us had our own roles which were as follows: Character movement/weapons, AI behavior and animation, level design, power ups and interactables, and lastly UI.</p>
+                <p>The core gameplay loop is to have the player progress through various hand crafted levels, where barriers block progression until the player can afford to clear them. The player gains money by killing enemies, and as they clear the levels, the player can find permanent powerups and  various weapon types. In co-op, if the other player dies, they are revived at the start of the next level. Game over happens when all players are dead.</p>
+                <p>Unfortunately, the video below isn't the best showcase of the game, as it was recorded using the keyboard and mouse, which we hadn't mapped to controls in the best way. Still, it gives a general sense of what functionality was implemented.</p>
+                <h2 id="Video Showcase">Video Showcase</h2><hr/>
+                <div>
+                    <iframe width="100%" height="400" src="https://www.youtube.com/embed/VEKq-8h-kAo?si=MyAbwhTOCpVZ1xb-" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                </div>
+			</article>
+			<!-- /Article -->
+			
+
+		</div>
+	</div>	<!-- /container -->
+	
+</main>
+
+<footer id="footer" class="topspace">
+	<div class="container">
+		<div class="row section">
+			<div class="col-md-12">
+				<p class="lead text-center text-muted">“The purpose of a storyteller is not to tell you how to think, but to give you questions to think upon.” <a href="https://www.goodreads.com/book/show/7235533-the-way-of-kings"><em>-- The Way of Kings</em>, Brandon Sanderson</a></p>
+			</div>
+		</div> <!-- / section -->
+	</div>
+</footer>
+
+<footer id="underfooter">
+	<div class="container">
+		<div class="row">
+			
+			<div class="col-md-6 widget">
+				<div class="widget-body">
+					<p class="follow-me-icons">
+						<a href="https://www.linkedin.com/in/jonathan-kump-a73b7722b/"><i class="fa fa-linkedin fa-2"></i></a>
+						<a href="https://github.com/jlkump"><i class="fa fa-github fa-2"></i></a>
+					</p>
+				</div>
+			</div>
+
+			<div class="col-md-6 widget">
+				<div class="widget-body">
+					<p class="text-right">
+						Copyright &copy; 2024, Landon Kump<br> 
+						Design: <a href="http://www.gettemplate.com" rel="designer">Initio by GetTemplate</a> </p>
+				</div>
+			</div>
+
+		</div> <!-- /row of widgets -->
+	</div>
+</footer>
+
+
+
+<!-- JavaScript libs are placed at the end of the document so the pages load faster -->
+<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script src="/assets/js/template.js"></script>
+</body>
+</html>

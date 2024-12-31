@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"    content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="author"      content="Landon Kump">
+	
+	<title>Godot Exploration | Landon Kump</title>
+
+	<link rel="shortcut icon" href="assets/images/gt_favicon.png">
+	
+	<!-- Bootstrap -->
+	<link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.no-icons.min.css" rel="stylesheet">
+	<!-- Icon font -->
+	<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+	<!-- Fonts -->
+	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Alice|Open+Sans:400,300,700">
+	<!-- Custom styles -->
+	<link rel="stylesheet" href="/assets/css/styles.css">
+
+	<!--[if lt IE 9]> <script src="assets/js/html5shiv.js"></script> <![endif]-->
+</head>
+<body>
+
+<header id="header">
+	<div id="head" class="parallax" parallax-speed="1">
+        <h1 id="logo" class="text-center">
+            <div style="height: 100px;"></div>
+			<span class="title">Godot Exploration | Landon Kump</span>
+            <div style="height: 100px;"></div>
+        </h1>
+	</div>
+
+	<nav class="navbar navbar-default navbar-sticky">
+		<div class="container-fluid">
+			
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar"> 
+					<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+				</button>
+			</div>
+
+			<div id="navbar" class="collapse navbar-collapse">
+				
+				<ul class="nav navbar-nav">
+					<li><a href="/index.html">Home</a></li>
+					<li><a href="/about.html">About</a></li>
+					<li><a href="/contact.html">Contact</a></li>
+					<li class="active"><a href="/projects.html">Projects</a></li>
+					<li><a href="/portfolio.html">Portfolio</a></li>
+				</ul>
+			
+			</div>
+		</div>	
+	</nav>
+</header>
+
+<main id="main">
+
+	<div class="container">
+
+		<div class="row topspace">
+			
+			<aside class="col-sm-4 sidebar sidebar-right">
+
+				<ul class="nav text-right nav-side">
+					<li><a href="#Overview">Overview</a></li>
+					<li><a href="#Video Showcase">Video Showcase</a></li>
+					<li><a href="#Process">Process</a></li>
+				</ul>
+
+			</aside>
+
+			<!-- Article main content -->
+			<article class="col-sm-8 maincontent">
+                <h2 id="Overview" class="page-title">Overview</h2><hr/>
+
+                <p> This project was done as a simple exploration into the Godot game engine. Through this project, I became more familiar with the Godot's syntax in C# as well as with creating event systems to handle game interactions. This project was also a chance to explore the creation of pixel art assets for games, as all the art seen is hand drawn and animated.</p>
+
+                <p>A showcase of the game is shown below and beneath that, a walkthrough of my process of understanding the Godot engine. <a href="https://jkump1.itch.io/pixel-golem">Itch.io Project</a></p>
+                
+                <h2 id="Video Showcase">Video Showcase</h2><hr/>
+                <iframe width="100%" height="500" src="https://www.youtube.com/embed/eq8NP4nfH9I?si=1FNIVDn5Tm7DIRkM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                
+                <h2 id="Process">Process</h2><hr/>
+                <p> For my game, I implemented a top-down pixel fighter with a character and randomly spawning enemies in a small environment. I began first by drawing sprites for the player character. I knew I wanted to do a simple rpg-style fighter, and I wanted a golem which would have various states of decay based on the health. As such, I designed the character with this in mind (however, it did increase the process of creating sprite animations three-fold).</p>
+                <div class="project-img-container">
+                    <div class="col-sm-4">
+                        <img src="/assets/images/godot-pixel-golem/golem-standing-fullhealth.png" alt="" />
+                    </div>
+                    <div class="col-sm-4">
+                        <img src="/assets/images/godot-pixel-golem/golem-standing-2health.png" alt="" />
+                    </div>
+                    <div class="col-sm-4">
+                        <img src="/assets/images/godot-pixel-golem/golem-standing-1health.png" alt="" />
+                    </div>
+                </div>
+                <p></p>
+                <p>Next, I designed the enemies with art in a similar way, though they would only have two states: activated and deactivated. In the active state, they would be able to attack, but deactivated, they would stand still and be open to attack from the player.</p>
+                <div class="project-img-container">
+                    <div class="col-sm-6">
+                        <img src="/assets/images/godot-pixel-golem/tablet-enemy-active.png" alt="" />
+                    </div>
+                    <div class="col-sm-6">
+                        <img src="/assets/images/godot-pixel-golem/tablet-enemy-deactive.png" alt="" />
+                    </div>
+                </div>
+                <p></p>
+                <p>Godot, while now supporting 3D games, was originally made for 2D and thus it is quite easy to import sprite animations as a 2D sprite sheet. Godot organizes the structure of a game in terms of scenes and nodes. Everything in the game is a node, whether it be a 2D animated sprite, sound player, or collision shape. These nodes are composed into trees of parent and child nodes, creating scenes. A scene could be an entity such as the player or enemy, ui elements, or the environment itself. Any scene that is created can be saved as, essentially, a prefab. This prefab can be used in other scenes to easily create duplicates of the same object.</p>
+                <p>For my project, I created scenes for the player, enemy, main enviornment, as well as for the UI elements and environment obstacles.</p>
+                <p>Interaction with things in the game are handled by attaching scripts to nodes in a scene. For handling all interactions, I used C# scripts on the main scene node. This node acted as a manager of sorts, handling interactions and sending signals based on the current game state. This ensured that no strange interactions occured, such as the player being able to move the character in the pause menu or pause while dead.</p>
+                <p>The player character had their own script which would handle  <code>CharacterInput</code> events, which would either change the velocity of the character to move in the  appropriate direction or have the character initiate an attack.</p>
+                <p>The character also emited its own signal when it attempted an attack, which the main script would handle by seeing if the  attack hit any enemies within the player's attack radius. If it did, it would handle killing the enemies and giving the player the appropriate number of points. Similarily, if the player died, the main scene would recieve a signal and put the gamestate in <code>Death</code>.</p>
+                <p>I created other assorted scenes for handling UI interaction with similar signal passing as that above with the player character. By seperating everything into destinct scenes and connecting them using signals, it ensured that no strange or unexpected interactions would occur, as well as greatly simpifying the code structure.</p>
+                <div class="project-img-container">
+                    <div class="col-sm-4">
+                        <img src="/assets/images/godot-pixel-golem/health-pips-ui.png" alt="" />
+                    </div>
+                    <div class="col-sm-4">
+                        <img src="/assets/images/godot-pixel-golem/menu-ui.png" alt="" />
+                    </div>
+                    <div class="col-sm-4">
+                        <img src="/assets/images/godot-pixel-golem/pause-ui.png" alt="" />
+                    </div>
+                </div>
+
+                <p>While being a fairly simple game, the project was a fun exploration into the Godot engine. It was interesting to see the differences between Godot and a more heavyweight engine like Unreal, as it was much easier to jump into Godot after having learned many engine concepts from Unreal.</p>
+
+			</article>
+			<!-- /Article -->
+			
+
+		</div>
+	</div>	<!-- /container -->
+	
+</main>
+
+<footer id="footer" class="topspace">
+	<div class="container">
+		<div class="row section">
+			<div class="col-md-12">
+				<p class="lead text-center text-muted">“The purpose of a storyteller is not to tell you how to think, but to give you questions to think upon.” <a href="https://www.goodreads.com/book/show/7235533-the-way-of-kings"><em>-- The Way of Kings</em>, Brandon Sanderson</a></p>
+			</div>
+		</div> <!-- / section -->
+	</div>
+</footer>
+
+<footer id="underfooter">
+	<div class="container">
+		<div class="row">
+			
+			<div class="col-md-6 widget">
+				<div class="widget-body">
+					<p class="follow-me-icons">
+						<a href="https://www.linkedin.com/in/jonathan-kump-a73b7722b/"><i class="fa fa-linkedin fa-2"></i></a>
+						<a href="https://github.com/jlkump"><i class="fa fa-github fa-2"></i></a>
+					</p>
+				</div>
+			</div>
+
+			<div class="col-md-6 widget">
+				<div class="widget-body">
+					<p class="text-right">
+						Copyright &copy; 2024, Landon Kump<br> 
+						Design: <a href="http://www.gettemplate.com" rel="designer">Initio by GetTemplate</a> </p>
+				</div>
+			</div>
+
+		</div> <!-- /row of widgets -->
+	</div>
+</footer>
+
+
+
+<!-- JavaScript libs are placed at the end of the document so the pages load faster -->
+<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script src="/assets/js/template.js"></script>
+</body>
+</html>
