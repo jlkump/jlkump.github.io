@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"    content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="author"      content="Landon Kump">
+	
+	<title>Custom Brush Shader | Landon Kump</title>
+
+	<link rel="shortcut icon" href="assets/images/gt_favicon.png">
+	
+	<!-- Bootstrap -->
+	<link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.no-icons.min.css" rel="stylesheet">
+	<!-- Icon font -->
+	<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+	<!-- Fonts -->
+	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Alice|Open+Sans:400,300,700">
+	<!-- Custom styles -->
+	<link rel="stylesheet" href="/assets/css/styles.css">
+
+	<!--[if lt IE 9]> <script src="assets/js/html5shiv.js"></script> <![endif]-->
+</head>
+<body>
+
+<header id="header">
+	<div id="head" class="parallax" parallax-speed="1">
+        <h1 id="logo" class="text-center">
+            <div style="height: 100px;"></div>
+			<span class="title">Custom Brush Shader | Landon Kump</span>
+            <div style="height: 100px;"></div>
+        </h1>
+	</div>
+
+	<nav class="navbar navbar-default navbar-sticky">
+		<div class="container-fluid">
+			
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar"> 
+					<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+				</button>
+			</div>
+
+			<div id="navbar" class="collapse navbar-collapse">
+				
+				<ul class="nav navbar-nav">
+					<li><a href="/index.html">Home</a></li>
+					<li><a href="/about.html">About</a></li>
+					<li><a href="/contact.html">Contact</a></li>
+					<li class="active"><a href="/projects.html">Projects</a></li>
+					<li><a href="/portfolio.html">Portfolio</a></li>
+				</ul>
+			
+			</div>
+		</div>	
+	</nav>
+</header>
+
+<main id="main">
+
+	<div class="container">
+
+		<div class="row topspace">
+			
+			<aside class="col-sm-4 sidebar sidebar-right">
+
+				<ul class="nav text-right nav-side">
+					<li><a href="#Overview">Overview</a></li>
+					<li><a href="#Video Showcase">Video Showcase</a></li>
+					<li><a href="#Process">Process</a></li>
+					<li><a href="#Results">Results</a></li>
+					<li><a href="#References">References</a></li>
+				</ul>
+
+			</aside>
+
+			<!-- Article main content -->
+			<article class="col-sm-8 maincontent">
+                <h2 id="Overview" class="page-title">Overview</h2><hr/>
+				<p>In this project, I explore NPR (Non-Photorealistic Rendering) techniques with a custom post process shader aiming to create the effect of brushstrokes on a model in realtime. I aimed to create a shader which was able to create the appearance of a painted scene utilizing artistic techniques with shaders in realtime. For research, I used refrence papers <i>Paint By Numbers: Abstract Image Representations</i> by Paul Haeberli <sup>[<a href="#ref-1">1</a>]</sup> and Amy and Bruce Gooch's <i>A Non-Photorealistic Lighting Model for Automatic Technical Illustration</i> <sup>[<a href="#ref-2">2</a>]</sup>. I implemented the NPR shaders in Opengl using C++, GLFW, and GLEW, as well as the boilerplate provided by Opengl Tutorial <sup>[<a href="#ref-3">3</a>]</sup>.</p>
+				<p>A showcase of the result of my work is shown below. Beneath that, I have some documentation of my progress on the project and how I achieved my results. Finally, I also speculate on alternate avenues for achieving artisitc effects through shaders. Here is the <a href="https://github.com/jlkump/NPR-Painterly-Shader">Github <i class="fa fa-github fa-2"></i></a> link for the project.</p>
+                
+                <h2 id="Video Showcase">Video Showcase</h2><hr/>
+                <iframe width="100%" height="400" src="https://www.youtube.com/embed/_AlnCiPDz30?si=wPz_pAeG36IL_nKE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="allowfullscreen"></iframe>
+                
+                <h2 id="Process">Process</h2><hr/>
+                <h4>Setup</h4>
+                <p>This being one of my first major projects with OpenGL rather than webGL, I began first by learning OpenGL. For this I used the online resource <a href="http://opengl-tutorial.org">opengl-tutorial.org</a>, which I can highly recommend as it provides all the necessary basics you might need for getting started with any OpenGL project. Since there's a lot that goes into a build system (and since I didn't want to spend time debugging build problems), I used the CmakeLists and project structure provided by the tutorial website. In the end, this added a lot of bloat to my project structure, so for anyone begining with OpenGL, I recommend using this <a href="https://github.com/tgalaj/OpenGLSampleCmake?tab=readme-ov-file">skeleton code <i class="fa fa-github fa-2"></i></a> provided by Tomasz Galaj for setting up the build system for your own projects.</p>
+
+                <h4>Lighting</h4>
+                <p>The tutorial's code provided all the necessary baseline code for rendering 3D objects with a camera. It also provided a simple lighting model Phong Illumination. However, Phong Illumination did not achieve the artistic appearance that I wanted, so I instead used the Gooch Illumination model.</p>
+
+                <p>The Gooch Illumination model works, at a high level, by taking what would normally be in darkness and adding cool tones to the model, while adding warm tones to the illuminated side. This is what artists normally do in their work, and for my rendering, it resulting in a more pleasing appearance that is softer on the harsh shadows of the Phong lighting model.</p>
+                <div class="project-img-container">
+                    <img src="/assets/images/npr-shader/before-after-gooche-illumination.png"/>
+                    <div style="display: flex; justify-content: space-between; width: 100%;">
+                        <div><i>Phong Illumination</i></div>
+                        <div><i>Gooch Illumination</i></div>
+                    </div>
+                </div>
+
+
+                <h4>Brush Stokes</h4>
+                <p>So now, I had to decide on how to approach the problem of rendering brushstrokes in realtime for my shader. I had initially thought about drawing individual brushstrokes on a texture using samples from the scene rendered to texture, however, doing this would be difficult to do in parallel on the GPU, as each brush stroke would have to be layered on the same shared texture. In addition, this would also create a new brush texture each frame, sure to be extrememly expensive.</p>
+
+                <p>Creating a static frame of brush strokes simplified the problem significantly. I would create a series of quads in screen space that each had a brush stroke texture. I created the quads on the CPU with a set of parametrizable variables, such as <code>BRUSH_SIZE</code>, <code>BRUSH_SIZE_VARIANCE</code>, <code>ANGLE</code>, <code>ANGLE_VARIANCE</code>, and <code>COLOR_VARIANCE</code>. Brush size is pretty self explanatory, being the size of an individual brush stroke. Angle is the angle at which the brush strokes would be applied on the screen. Color variance is the range at which a random amount of color would be added to brush stroke. Variance for size and angle also added a random amount to the brush size and angle within a given range.</p>
+
+                <p>To render the result, I simply had to render the scene I had previously to texture, then read from that texture in the brush stroke shaders. To make sure each brush stroke had fairly uniform color, I would sample the rendered texture only at the vertices of the brush stroke. The results are shown below.</p>
+                <div class="project-img-container">
+                    <img src="/assets/images/npr-shader/first-iteration-small-strokes.png"/>
+                    <img src="/assets/images/npr-shader/first-iteration-small-strokes.png"/>
+                </div>
+
+                <p>As you can see, this resulted in some strange shadow-like artifacts on the final render. This effect was particularly apparent with larger brush sizes. I found that the problem came from some brushstrokes in the lower right having a majority of the brush stroke quad with the background color value, but one or two values of the object itself. This resulted in a blended color between the two for a brush stroke. A somewhat poor solution to this problem, I simply discarded all fragments that had a color close to the background color.</p>
+
+                <p>After fixing that, the shader really came together. Playing with the parameters to the brush strokes a bit, I came to some good looking renders:</p>
+
+                <h2 id="Results">Results</h2><hr/>
+                <div class="project-img-container">
+                    <img src="/assets/images/npr-shader/brush-strokes-small.png"/>
+                    <img src="/assets/images/npr-shader/brush-strokes-large.png"/>
+                    <img src="/assets/images/npr-shader/brush-strokes-splatter.png"/>
+                    <img src="/assets/images/npr-shader/big-random-strokes.png"/>
+                    <img src="/assets/images/npr-shader/high-variance.png"/>
+                </div>
+
+                <h2 id="References">References</h2><hr/>
+                <ol class="ref">
+                    <li><a id="ref-1" href="https://doi.org/10.1145/97880.97902">Paul Haeberli. 1990. <em>Paint by numbers: abstract image representations</em>. SIGGRAPH Comput. Graph. 24, 4 (Aug. 1990), 207-214.</a></li>
+                    <li><a id="ref-2" href="https://users.cs.northwestern.edu/~ago820/SIG98/abstract.html">Amy Gooch, Bruce Gooch. <em>A Non-Photorealistic Lighting Model For Automatic Technical Illustration</em>. SIGGRAPH Aug. 1998.</a></li>
+
+                    <li><a id="ref-3" href="https://www.cs.ubc.ca/~rbridson/docs/zhu-siggraph05-sandfluid.pdf">OpenGL Tutorial</a></li>
+                    <li><a id="ref-4" href="https://github.com/tgalaj/OpenGLSampleCmake?tab=readme-ov-file">Tomasz Galaj, CMake OpenGL Boilerplate</a></li>
+                </ol>
+
+
+			</article>
+			<!-- /Article -->
+			
+
+		</div>
+	</div>	<!-- /container -->
+	
+</main>
+
+<footer id="footer" class="topspace">
+	<div class="container">
+		<div class="row section">
+			<div class="col-md-12">
+				<p class="lead text-center text-muted">“The purpose of a storyteller is not to tell you how to think, but to give you questions to think upon.” <a href="https://www.goodreads.com/book/show/7235533-the-way-of-kings"><em>-- The Way of Kings</em>, Brandon Sanderson</a></p>
+			</div>
+		</div> <!-- / section -->
+	</div>
+</footer>
+
+<footer id="underfooter">
+	<div class="container">
+		<div class="row">
+			
+			<div class="col-md-6 widget">
+				<div class="widget-body">
+					<p class="follow-me-icons">
+						<a href="https://www.linkedin.com/in/jonathan-kump-a73b7722b/"><i class="fa fa-linkedin fa-2"></i></a>
+						<a href="https://github.com/jlkump"><i class="fa fa-github fa-2"></i></a>
+					</p>
+				</div>
+			</div>
+
+			<div class="col-md-6 widget">
+				<div class="widget-body">
+					<p class="text-right">
+						Copyright &copy; 2024, Landon Kump<br> 
+						Design: <a href="http://www.gettemplate.com" rel="designer">Initio by GetTemplate</a> </p>
+				</div>
+			</div>
+
+		</div> <!-- /row of widgets -->
+	</div>
+</footer>
+
+
+
+<!-- JavaScript libs are placed at the end of the document so the pages load faster -->
+<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script src="/assets/js/template.js"></script>
+</body>
+</html>

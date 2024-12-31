@@ -4,9 +4,9 @@
 	<meta charset="utf-8">
 	<meta name="viewport"    content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="">
-	<meta name="author"      content="Sergey Pozhilov (GetTemplate.com)">
+	<meta name="author"      content="Landon Kump">
 	
-	<title>About | Landon Kump</title>
+	<title>Twin Stick Shooter | Landon Kump</title>
 
 	<link rel="shortcut icon" href="assets/images/gt_favicon.png">
 	
@@ -17,19 +17,19 @@
 	<!-- Fonts -->
 	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Alice|Open+Sans:400,300,700">
 	<!-- Custom styles -->
-	<link rel="stylesheet" href="assets/css/styles.css">
+	<link rel="stylesheet" href="/assets/css/styles.css">
 
 	<!--[if lt IE 9]> <script src="assets/js/html5shiv.js"></script> <![endif]-->
 </head>
 <body>
 
 <header id="header">
-	<div id="head" class="parallax" parallax-speed="2">
-		<h1 id="logo" class="text-center">
-			<div style="height: 100px;"></div>
-			<span class="title">About | Landon Kump</span>
-			<div style="height: 100px;"></div>
-		</h1>
+	<div id="head" class="parallax" parallax-speed="1">
+        <h1 id="logo" class="text-center">
+            <div style="height: 100px;"></div>
+			<span class="title">Twin Stick Shooter | Landon Kump</span>
+            <div style="height: 100px;"></div>
+        </h1>
 	</div>
 
 	<nav class="navbar navbar-default navbar-sticky">
@@ -45,9 +45,9 @@
 				
 				<ul class="nav navbar-nav">
 					<li><a href="/index.html">Home</a></li>
-					<li class="active"><a href="/about.html">About</a></li>
+					<li><a href="/about.html">About</a></li>
 					<li><a href="/contact.html">Contact</a></li>
-					<li><a href="/projects.html">Projects</a></li>
+					<li class="active"><a href="/projects.html">Projects</a></li>
 					<li><a href="/portfolio.html">Portfolio</a></li>
 				</ul>
 			
@@ -61,13 +61,26 @@
 	<div class="container">
 
 		<div class="row topspace">
+			
+			<aside class="col-sm-4 sidebar sidebar-right">
+
+				<ul class="nav text-right nav-side">
+					<li><a href="#Overview">Overview</a></li>
+					<li><a href="#Video Showcase">Video Showcase</a></li>
+				</ul>
+
+			</aside>
+
 			<!-- Article main content -->
-			<article class="col-sm-8 col-sm-offset-2">
-				<div class="center-container"><img style="height: 100px; width: 140px;" class="no-antialiasing" src="/assets/images/godot-pixel-golem/GolemWalking.gif" alt="" class="" width="100%" ></div>
-				<p></p>
-				<p>I am a recent CS graduate from the University of Texas at Austin, specializing in game programming and graphics. A story-teller and worldbuilder at heart, I aim to bring the best experience possible to players, captivating them with stunning visuals and completely immersing them in other worlds. In particular, I enjoy the technical aspects of game development, including engine development, graphics, physics, and networking.</p>
-				<p>To that end, I have studied throughly with personal projects in all major engines as well as in lower-level software, such as OpenGL and CUDA. I have also programmed for and directed the publishing of <a href="https://store.steampowered.com/app/2962650/Banana_Cowboy/">Banana Cowboy on Steam</a> with a team of talented inter-disciplinary students. Having completed my degree, I am now looking to work further on challenging projects. If you're looking for a dedicated and innovative programmer to bring your next project or idea to life, I'd love to connect. Get in touch and let's make it happen!</p>
-				<div style="width: 100%;" class="center-container"><a href="/contact.html" class="btn btn-primary btn-lg">Contact</a></div>
+			<article class="col-sm-8 maincontent">
+                <h2 id="Overview" class="page-title">Overview</h2><hr/>
+                <p>For this project, me and a group of fellow students in our Game Programming class came together to work a game of our own design. We had been working in Unreal throughout the semester, learning how to navigate and build for large scale applications. Each of us had our own roles which were as follows: Character movement/weapons, AI behavior and animation, level design, power ups and interactables, and lastly UI.</p>
+                <p>The core gameplay loop is to have the player progress through various hand crafted levels, where barriers block progression until the player can afford to clear them. The player gains money by killing enemies, and as they clear the levels, the player can find permanent powerups and  various weapon types. In co-op, if the other player dies, they are revived at the start of the next level. Game over happens when all players are dead.</p>
+                <p>Unfortunately, the video below isn't the best showcase of the game, as it was recorded using the keyboard and mouse, which we hadn't mapped to controls in the best way. Still, it gives a general sense of what functionality was implemented.</p>
+                <h2 id="Video Showcase">Video Showcase</h2><hr/>
+                <div>
+                    <iframe width="100%" height="400" src="https://www.youtube.com/embed/VEKq-8h-kAo?si=MyAbwhTOCpVZ1xb-" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                </div>
 			</article>
 			<!-- /Article -->
 			
@@ -76,7 +89,6 @@
 	</div>	<!-- /container -->
 	
 </main>
-
 
 <footer id="footer" class="topspace">
 	<div class="container">
@@ -114,9 +126,11 @@
 </footer>
 
 
+
 <!-- JavaScript libs are placed at the end of the document so the pages load faster -->
+<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-<script src="assets/js/template.js"></script>
+<script src="/assets/js/template.js"></script>
 </body>
 </html>
