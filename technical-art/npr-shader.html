@@ -1,0 +1,155 @@
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Generic - Editorial by HTML5 UP</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="/assets/css/main.css" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+								<header id="header">
+									<a href="/technical-art/hompage.html" class="logo"><strong>Landon Kump</strong> - Technical Artist</a>
+									<ul class="icons">
+										<li><a href="https://github.com/jlkump" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+										<li><a href="https://www.linkedin.com/in/jonathan-kump-a73b7722b/" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
+									</ul>
+								</header>
+
+							<!-- Content -->
+								<section>
+									<header class="main">
+										<h1>NPR Paintbrush Shader</h1>
+									</header>
+									
+									<p>In this project, I explore NPR (Non-Photorealistic Rendering) techniques with a custom post process shader aiming to create the effect of brushstrokes on a model in realtime. I aimed to create a shader which was able to create the appearance of a painted scene utilizing artistic techniques with shaders in realtime. For research, I used refrence papers <i>Paint By Numbers: Abstract Image Representations</i> by Paul Haeberli <sup>[<a href="#ref-1">1</a>]</sup> and Amy and Bruce Gooch's <i>A Non-Photorealistic Lighting Model for Automatic Technical Illustration</i> <sup>[<a href="#ref-2">2</a>]</sup>. I implemented the NPR shaders in Opengl using C++, GLFW, and GLEW, as well as the boilerplate provided by Opengl Tutorial <sup>[<a href="#ref-3">3</a>]</sup>.</p>
+
+									<p>A showcase of the result of my work is shown below. Beneath that, I have some documentation of my progress on the project and how I achieved my results. Finally, I also speculate on alternate avenues for achieving artisitc effects through shaders. Here is the <a href="https://github.com/jlkump/NPR-Painterly-Shader">Github <i class="icon brands fa-github"></i></a> link for the project.</p>
+									
+									<div class="align-center">
+										<iframe width="100%" height="400" class="video-showcase" src="https://www.youtube.com/embed/_AlnCiPDz30?si=wPz_pAeG36IL_nKE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="allowfullscreen"></iframe>
+									</div>
+
+									<hr class="major" />
+
+									<h2>Setup</h2>
+									<p>This being one of my first major projects with OpenGL rather than webGL, I began first by learning OpenGL. For this I used the online resource <a href="http://opengl-tutorial.org">opengl-tutorial.org</a>, which I can highly recommend as it provides all the necessary basics you might need for getting started with any OpenGL project. Since there's a lot that goes into a build system (and since I didn't want to spend time debugging build problems), I used the CmakeLists and project structure provided by the tutorial website. In the end, this added a lot of bloat to my project structure, so for anyone begining with OpenGL, I recommend using this <a href="https://github.com/tgalaj/OpenGLSampleCmake?tab=readme-ov-file">skeleton code <i class="fa fa-github fa-2"></i></a> provided by Tomasz Galaj for setting up the build system for your own projects.</p>
+
+									<h2>Lighting</h2>
+									<p>The tutorial's code provided all the necessary baseline code for rendering 3D objects with a camera. It also provided a simple lighting model Phong Illumination. However, Phong Illumination did not achieve the artistic appearance that I wanted, so I instead used the Gooch Illumination model.</p>
+
+									<p>The Gooch Illumination model works, at a high level, by taking what would normally be in darkness and adding cool tones to the model, while adding warm tones to the illuminated side. This is what artists normally do in their work, and for my rendering, it resulting in a more pleasing appearance that is softer on the harsh shadows of the Phong lighting model.</p>
+
+									<div class="align-center"><a class="image"><img src="/images/tech-art/npr-shader/before-after-gooche-illumination.png"/></a></div>
+
+									<h2>Brush Strokes</h2>
+									<p>So now, I had to decide on how to approach the problem of rendering brushstrokes in realtime for my shader. I had initially thought about drawing individual brushstrokes on a texture using samples from the scene rendered to texture, however, doing this would be difficult to do in parallel on the GPU, as each brush stroke would have to be layered on the same shared texture. In addition, this would also create a new brush texture each frame, sure to be extrememly expensive.</p>
+
+									<p>Creating a static frame of brush strokes simplified the problem significantly. I would create a series of quads in screen space that each had a brush stroke texture. I created the quads on the CPU with a set of parametrizable variables, such as <code>BRUSH_SIZE</code>, <code>BRUSH_SIZE_VARIANCE</code>, <code>ANGLE</code>, <code>ANGLE_VARIANCE</code>, and <code>COLOR_VARIANCE</code>. Brush size is pretty self explanatory, being the size of an individual brush stroke. Angle is the angle at which the brush strokes would be applied on the screen. Color variance is the range at which a random amount of color would be added to brush stroke. Variance for size and angle also added a random amount to the brush size and angle within a given range.</p>
+
+									<p>To render the result, I simply had to render the scene I had previously to texture, then read from that texture in the brush stroke shaders. To make sure each brush stroke had fairly uniform color, I would sample the rendered texture only at the vertices of the brush stroke. The results are shown below.</p>
+
+									<div class="align-center"><a class="image main"><img src="/images/tech-art/npr-shader/first-iteration-small-strokes.png"></a></div>
+									<div class="align-center"><a class="image main"><img src="/images/tech-art/npr-shader/first-iteration-large-strokes.png"></a></div>
+
+									<p>As you can see, this resulted in some strange shadow-like artifacts on the final render. This effect was particularly apparent with larger brush sizes. I found that the problem came from some brushstrokes in the lower right having a majority of the brush stroke quad with the background color value, but one or two values of the object itself. This resulted in a blended color between the two for a brush stroke. A somewhat poor solution to this problem, I simply discarded all fragments that had a color close to the background color.</p>
+
+									<p>After fixing that, the shader really came together. Playing with the parameters to the brush strokes a bit, I came to some good looking renders.</p>
+
+									<h2>Final Renders</h2>
+									<div class="align-center"><a class="image main"><img src="/images/tech-art/npr-shader/brush-strokes-small.png"></a></div>
+									<div class="align-center"><a class="image main"><img src="/images/tech-art/npr-shader/brush-strokes-large.png"></a></div>
+									<div class="align-center"><a class="image main"><img src="/images/tech-art/npr-shader/brush-strokes-splatter.png"></a></div>
+									<div class="align-center"><a class="image main"><img src="/images/tech-art/npr-shader/big-random-strokes.png"></a></div>
+									<div class="align-center"><a class="image main"><img src="/images/tech-art/npr-shader/high-variance.png"></a></div>
+
+									<hr class="major" />
+
+									<h2>References</h2>
+									<ol class="ref">
+										<li><a id="ref-1" href="https://doi.org/10.1145/97880.97902">Paul Haeberli. 1990. <em>Paint by numbers: abstract image representations</em>. SIGGRAPH Comput. Graph. 24, 4 (Aug. 1990), 207-214.</a></li>
+										<li><a id="ref-2" href="https://users.cs.northwestern.edu/~ago820/SIG98/abstract.html">Amy Gooch, Bruce Gooch. <em>A Non-Photorealistic Lighting Model For Automatic Technical Illustration</em>. SIGGRAPH Aug. 1998.</a></li>
+
+										<li><a id="ref-3" href="https://www.cs.ubc.ca/~rbridson/docs/zhu-siggraph05-sandfluid.pdf">OpenGL Tutorial</a></li>
+										<li><a id="ref-4" href="https://github.com/tgalaj/OpenGLSampleCmake?tab=readme-ov-file">Tomasz Galaj, CMake OpenGL Boilerplate</a></li>
+									</ol>
+
+								</section>
+
+						</div>
+					</div>
+
+				<!-- Sidebar -->
+					<div id="sidebar" class="inactive">
+						<div class="inner">
+
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<h2>Menu</h2>
+									</header>
+									<ul>
+										<li><a href="/index.html">Homepage</a></li>
+										<li>
+											<span class="opener">Technical Art</span>
+											<ul>
+												<li><a href="#">Inverse Kinematics</a></li>
+												<li><a href="#">Water Surface Shader</a></li>
+												<li><a href="#">Paintbrush Shader</a></li>
+												<li><a href="/technical-art/hompage.html">+ See All</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Gameplay Programming</span>
+											<ul>
+												<li><a href="#">Ability Combo System</a></li>
+												<li><a href="#">Banana Cowboy: The Wild Bunch</a></li>
+												<li><a href="#">Banana Cowboy</a></li>
+												<li><a href="#">+ See All</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Assorted Code Projects</span>
+											<ul>
+												<li><a href="#">RPG Helper</a></li>
+												<li><a href="#">+ See All</a></li>
+											</ul>
+										</li>
+										<li><a href="#">Creative Portfolio</a></li>
+										<li><a href="#">Contact</a></li>
+									</ul>
+								</nav>
+
+							<!-- Footer -->
+								<footer id="footer">
+									<p class="copyright">&copy; Landon Kump. All rights reserved.</p>
+									<p class="copyright">Demo Images: <a href="https://unsplash.com">Unsplash</a>. <br/>Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+								</footer>
+
+						</div>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="/assets/js/jquery.min.js"></script>
+			<script src="/assets/js/browser.min.js"></script>
+			<script src="/assets/js/breakpoints.min.js"></script>
+			<script src="/assets/js/util.js"></script>
+			<script src="/assets/js/main.js"></script>
+
+	</body>
+</html>
