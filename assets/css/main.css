@@ -1,5 +1,12 @@
 @import url(fontawesome-all.min.css);
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,600,400italic,600italic|Roboto+Slab:400,700");
+
+.align-center img
+{
+  max-width: 90vw;
+  max-height: 100vh;
+}
+
 /*
 	Editorial by HTML5 UP
 	html5up.net | @ajlkn
@@ -1749,7 +1756,7 @@ button,
     margin: 0 0 6em 6em;
     position: relative;
     width: calc(33.33333% - 6em); }
-    .posts article:before {
+    /* .posts article:before {
       background: rgba(210, 215, 217, 0.75);
       content: '';
       display: block;
@@ -1757,7 +1764,8 @@ button,
       left: -3em;
       position: absolute;
       top: 0;
-      width: 1px; }
+      width: 1px; 
+      }
     .posts article:after {
       background: rgba(210, 215, 217, 0.75);
       bottom: -3em;
@@ -1766,7 +1774,8 @@ button,
       height: 1px;
       position: absolute;
       right: 0;
-      width: calc(100% + 6em); }
+      width: calc(100% + 6em); 
+      } */
     .posts article > :last-child {
       margin-bottom: 0; }
     .posts article .image {
@@ -2297,12 +2306,19 @@ button,
 
 .video-showcase
 {
-  width: min(800px, 100%);
+  width: min(100%, 800px);
+  height: min(70vh, 500px);
   margin-left: auto;
   margin-right: auto;
 }
 
 .ref li a
+{
+  color: #f45c5c;
+}
+
+code,
+code a
 {
   color: #f45c5c;
 }
