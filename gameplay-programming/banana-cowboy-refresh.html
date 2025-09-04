@@ -1,0 +1,388 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Banana Cowboy: The Wild Bunch - Landon Kump</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="/assets/css/main.css" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+								<header id="header">
+									<a href="/technical-art/homepage.html" class="logo"><strong>Landon Kump</strong> - Gameplay Programmer</a>
+									<ul class="icons">
+										<li><a href="https://github.com/jlkump" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+										<li><a href="https://www.linkedin.com/in/jonathan-kump-a73b7722b/" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
+									</ul>
+								</header>
+
+							<!-- Content -->
+								<section>
+									<header class="main">
+										<h1>Banana Cowboy: The Wild Bunch</h1>
+									</header>
+									
+									<p>Banana Cowboy: The Wild Bunch is a continuation of Banana Cowboy with a much more polished and full featured gameplay. The game started due to the positive feedback we recieved for the original game as just a student project. We expanded our team, gaining talent with industry experience to help bring the game's goals to fruition.</p>
+									<p>This article will cover the features I developed for the game, as well as document the major milestones for the game's development (noteably our switch from Unity to Unreal). The video below showcases the gameplay in the most recent playable.</p>
+
+									<!-- Showcase -->
+									<div class="align-center">
+										<iframe width="100%" height="400" class="video-showcase" src="https://www.youtube.com/embed/_AlnCiPDz30?si=wPz_pAeG36IL_nKE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="allowfullscreen"></iframe>
+									</div>
+
+									
+									<!-- Unity Development -->
+									<hr class="major" />
+									<h2>Unity Development</h2>
+									<p>We began our polished remake of Banana Cowboy using Unity, as it was the engine we had used for the previous game and thus the one all members of the team were most familiar with. However, eventually the cons of Unity began to pile up and we had to switch to Unreal later down the line. That process, as well as the development in Unreal, will be described later in this article. This section will contain features developed in Unity.</p>
+									<div class="align-center">
+										<span><img src="/images/gameplay-programming/banana-cowboy/Movement-College-Unity.gif" /></span>
+										<div><i>The finalized moveset for the player in Unity just before the switch to Unreal</i></div>
+									</div>
+									<h3>Player Controller</h3>
+									<p></p>
+									<ol>
+										<li>Gravity Relative Movement</li>
+										<li>Coyotee Time and Jump Buffering</li>
+									</ol>
+									<h4>Debug Tools</h4>
+									<p>Flying / Clipping toggle</p>
+
+									<h3>Lasso Abilities</h3>
+									<p>Generic Lassoable</p>
+									<h4>Swing</h4>
+									<p>Swing Variations</p>
+									<h4>Dash</h4>
+									<p>Dash ability</p>
+									<h4>Lasso Enemy</h4>
+									<p>Close Gap</p>
+
+									<h3>Enemy AI - Behavior Trees</h3>
+									<p>Behavior Tree Abstraction with Nodes</p>
+									<p>Event based updates</p>
+
+									<h3>Gravity System</h3>
+									<p>Gravity Object and Gravity Source</p>
+									<h4>Different Shapes Showcase</h4>
+
+									<h3>Camera System</h3>
+									<p>Platforming style camera</p>
+									<h4>Camera Hints</h4>
+									<h4>Camera Wiskers</h4>
+
+									<h3>Rope IK</h3>
+									<p>Rope rendering</p>
+
+									<!-- Unreal Development -->
+									<hr class="major" />
+									<h2>Unreal Development</h2>
+									<p>One of the main cons of Unity is that there are not a lot of features provided out of the box. As developers, we had to design and implement many features that are common across many games, leading to lost development time debugging what is essentially game programmer boilerplate. The leading example of this is the Kinematic Character Controller for Unity, which I had to develop from the ground up, using what I could find online as an example. In Unreal, not only is there a character and controller class framework given, it is extremely straightforward to modify to suit the needs of the game due to its modular nature.</p>
+									<p>This problem of implementing common features and systems from the ground up kept reoccuring. The player controller, the camera system, the enemy AI, inverse kinematics, and level layout tools; All required tools to be built by us. We tried to use tools pre-made for some problems we were running into (such as a terrain sculpting tool), but found that the development of such tools in Unity was lackluster, often being left out of date for official tooling. Additionally, the tools that were available required learning from documentation that may have been outdated or required using user interfaces that were unintuitive.</p>
+									<p>When we sat back and realized this problem with Unity was going to continue happening throughout all of the development, we starting considering Unreal. It provides much of what we were lacking in a much more user friendly way. Since the level designers and artists were already learning new tools, the major brunt of the switch would have to be endured by the programmers for re-making many features in C++ and Blueprint. As the lead programmer, I made the decision that this would be worth the switch in the long run.</p>
+									<p>Thus we began a learning period for Unreal and the switch from Unreal to Unity for our development.</p>
+									<blockquote>For our learning period, we used <a href="https://dev.epicgames.com/documentation/en-us/unreal-engine/understanding-the-basics-of-unreal-engine">Unreal's intro documentation</a> as well as the <a href="https://dev.epicgames.com/community/learning/paths/0w/unreal-engine-beginplay">Begin Play</a> Unreal tutorial series.</blockquote>
+
+									<h3>GAS Framework</h3>
+									<p>During the learning period, I had discovered <a href="https://dev.epicgames.com/documentation/en-us/unreal-engine/gameplay-ability-system-for-unreal-engine">Unreal's Gameplay Ability System</a> framework for programming player and enemy gameplay features. The framework is incredibly extensive and flexible, providing a system to track state, cooldowns, activations requirements, and subtasks for a player's abilities. While designed for MOBAs and RPGs, the flexibility and modularity of the framework appealed to me for the design our player's moveset and lasso feature.</p>
+
+									<h3>Player Programming</h3>
+									<p>For the player programming, I utilized the GAS framework extensively, creating attribute sets that define parameters for each ability that could be adjusted by modifiers during runtime (such as jump height, movespeed, roll speed, coyote time, etc.). The end result is a highly configurable setup for each ability for the player, all of which can be easily removed and added by designers.</p>
+									<div class="align-center">
+										<div class="row">
+											<div class="col-6">
+												<span class="image fit"><img src="/images/gameplay-programming/banana-cowboy/Abilities.png" alt="" /></span>
+											</div>
+											<div class="col-6">
+												<span class="image fit"><img src="/images/gameplay-programming/banana-cowboy/Jump Parameters.png" alt="" /></span>
+											</div>
+										</div>
+									</div>
+									<h4>Movement Abilities</h4>
+									<p>Here are showcased some of the abilities in action, including ledge hanging, <a href="https://en.wiktionary.org/wiki/coyote_time">coyote time</a>, rolling, jumping, wall sliding, and momentum speed (where the player maintains extra speed after completing a movement combo).</p>
+									<div class="align-center">
+										<div class="row">
+											<div class="col-4">
+												<span class="image fit"><img src="/images/gameplay-programming/banana-cowboy/CoyoteTimeAndHang.gif" alt="" /></span>
+												<div><i>Coyote Time and Ledge Hanging</i></div>
+											</div>
+											<div class="col-4">
+												<span class="image fit"><img src="/images/gameplay-programming/banana-cowboy/Moveset-First-Iteration.gif" alt="" /></span>
+												<div><i>First iteration of moveset abilities</i></div>
+											</div>
+											<div class="col-4">
+												<span class="image fit"><img src="/images/gameplay-programming/banana-cowboy/Moveset-Current.gif" alt="" /></span>
+												<div><i>Current iteration of moveset abilities</i></div>
+											</div>
+										</div>
+									</div>
+									<p><br/></p>
+									<h4>Lasso Abilities</h4>
+									<p>Beyond the base moveset of the player, I also programmed an extensible base interface for the lasso system for the player. This system was designed heavily around the layout of a controller, where the player would hold the right trigger to control their hold with the lasso, and the face buttons would control the response and desired ability activation. This design, while providing a true all-use utility for the lasso, ended up being too complex and frustrating for players, so we switched to a much simplier, one-action per lassoable design.</p>
+
+									<p>I then used this framework to program the dash post, grapple post, swing anchor, throwables and enemy lassoable.</p>
+									<div class="align-center">
+										<div class="row">
+											<div class="col-4">
+												<span class="image fit"><img src="/images/gameplay-programming/banana-cowboy/Player-Dash.gif" alt="" /></span>
+												<div><i>Dash post lassoable</i></div>
+											</div>
+											<div class="col-4">
+												<span class="image fit"><img src="/images/gameplay-programming/banana-cowboy/Player-Swing.gif" alt="" /></span>
+												<div><i>Swing anchor lassoable</i></div>
+											</div>
+											<div class="col-4">
+												<span class="image fit"><img src="/images/gameplay-programming/banana-cowboy/Player-Grapple.gif" alt="" /></span>
+												<div><i>Grapple post lassoable</i></div>
+											</div>
+										</div>
+									</div>
+									<div class="align-center" style="margin-top: 4em;">
+										<div class="row">
+											<div class="col-6">
+												<span class="image fit"><img src="/images/gameplay-programming/banana-cowboy/Player-Throwables.gif" alt="" /></span>
+												<div><i>Object throwables</i></div>
+											</div>
+											<div class="col-6">
+												<span class="image fit"><img src="/images/gameplay-programming/banana-cowboy/Player-Enemy-Lassoable.gif" alt="" /></span>
+												<div><i>Enemy yank and throwable</i></div>
+											</div>
+										</div>
+									</div>
+									
+									<h3>Interactables and Cosmetics</h3>
+									<p>I created a cosmetic system for the player to equip and un-equip different models to sockets of the player model. Alongside this, I developed an interaction framework, which was used for cosmetic equip points, as well as future level elements and npc interaction.</p>
+									<div class="align-center">
+										<span class="image-fit"><img src="/images/gameplay-programming/banana-cowboy/Player-Interact.gif" /></span>
+										<div><i>Interact framework used for lever and cosmetic interactables</i></div>
+									</div>
+
+									<h3>Horse Riding</h3>
+									<p>I programmed a new movement state for the player where they mount and ride a horse, steering left and right, with the ability to "giddy up" to increase the speed of the horse.</p>
+									<div class="align-center">
+										<span class="image-fit"><img src="/images/gameplay-programming/banana-cowboy/Horse-Riding.gif" /></span>
+									</div>
+
+									<h3>Camera Hints and Constraints</h3>
+									<p>I implemented custom camera constraints and hints framework for designers to use when building out levels, providing ways to hint to players the direction to go as well as frame platforming interactions automatically. Additionally, I modified the base camera provided by Unreal to automatically look in the direction of movement when no input by the player is provided.</p>
+									<div class="align-center" style="margin-top: 4em;">
+										<div class="row">
+											<div class="col-6">
+												<span class="image fit"><img src="/images/gameplay-programming/banana-cowboy/Camera-Platforming.gif"" alt="" /></span>
+												<div><i>Platforming camera view (zooms out smoothly when entered)</i></div>
+											</div>
+											<div class="col-6">
+												<span class="image fit"><img src="/images/gameplay-programming/banana-cowboy/Camera-Constrained.gif" alt="" /></span>
+												<div><i>Constrained side camera view</i></div>
+											</div>
+										</div>
+									</div>
+									<div class="align-center" style="margin-top: 4em;">
+										<div class="row">
+											<div class="col-6">
+												<span class="image fit"><img src="/images/gameplay-programming/banana-cowboy/Camera-Hint.gif"" alt="" /></span>
+												<div><i>Hint rotation toward point of interest</i></div>
+											</div>
+											<div class="col-6">
+												<span class="image fit"><img src="/images/gameplay-programming/banana-cowboy/Camera-Auto-Rotate.gif" alt="" /></span>
+												<div><i>Auotmatic rotation toward walking direction</i></div>
+											</div>
+										</div>
+									</div>
+									<div class="align-center" style="margin-top: 4em;">
+										<span style="width: min(100%, 400px);"><img src="/images/gameplay-programming/banana-cowboy/Camera-Tool-Demo.gif" alt="" /></span>
+										<div><i>In-engine camera constraint visualization</i></div>
+									</div>
+
+									<h3>UI Layers and Controller Interaction</h3>
+									<p>Designed and implemented a UI layout manager, which handles layers of UI to prevent conflict between the inventory, hud, pause, menu, comic, and dialog layers, both for display and for controller navigation. Also implemented a custom controller UI interaction system utilizing Unreal's Enhanced Input system and Input Mapping Contexts.</p>
+
+									<div class="align-center" style="margin-top: 4em;">
+										<div class="row">
+											<div class="col-4">
+												<span class="image fit"><img src="/images/gameplay-programming/banana-cowboy/Layers.png"" alt="" /></span>
+												<div><i>The different UI layers</i></div>
+											</div>
+											<div class="col-8">
+												<span class="image fit"><img src="/images/gameplay-programming/banana-cowboy/UI-Demo.gif" alt="" /></span>
+												<div><i>All different UI layers in-game, with controller navigation</i></div>
+											</div>
+										</div>
+									</div>
+
+									<h3>NPC Interaction and Dialog System</h3>
+									<div class="row">
+										<div class="col-6">
+											<p>I designed and implemented the dialog and NPC interaction for the game, utilizing Unreal's data assets for a custom dialog asset (shown to the right), as well as creating a custom editor plugin to allow designers to configure each NPC's dialog camera interaction.</p>
+										</div>
+										<div class="col-6">
+											<span class="image fit"><img src="/images/gameplay-programming/banana-cowboy/Dialog Asset.png" alt="" /></span>
+										</div>
+									</div>
+									<div class="align-center" style="margin-top: 4em;">
+										<div class="row">
+											<div class="col-6">
+												<span class="image fit"><img src="/images/gameplay-programming/banana-cowboy/Dialog-Tool.gif"" alt="" /></span>
+												<div><i>Dialog configuration in-engine</i></div>
+											</div>
+											<div class="col-6">
+												<span class="image fit"><img src="/images/gameplay-programming/banana-cowboy/Dialog-Demo.gif" alt="" /></span>
+												<div><i>Dialog interaction in-game</i></div>
+											</div>
+										</div>
+									</div>
+
+									<h3>Quest System</h3>
+									<p>I designed the quest system similarly to the NPC dialog system, using Unreal's data assets to create a custom Quest Asset, which designers could configure to create custom quests. The quest system handles the creation of UI display dynamically created from the configured Quest Asset. Additionally, designers have fully access to the functionality of the quest system within blueprint through custom Blueprint Functions. Additionally, the quest system progress is persistent between levels and reloads.</p>
+
+									<div class="align-center" style="margin-top: 4em;">
+										<div class="row">
+											<div class="col-4">
+												<span class="image fit"><img src="/images/gameplay-programming/banana-cowboy/Quest-Asset.png"" alt="" /></span>
+												<div><i>Quest asset configuration, with variable number of subtasks and display image and text for UI</i></div>
+											</div>
+											<div class="col-4">
+												<span class="image fit"><img src="/images/gameplay-programming/banana-cowboy/Quest-Blueprint-Give.png"" alt="" /></span>
+												<div><i>Blueprint node for giving a quest (from a chosen quest asset)</i></div>
+											</div>
+											<div class="col-4">
+												<span class="image fit"><img src="/images/gameplay-programming/banana-cowboy/Quest-Blueprint-Progress.png" alt="" /></span>
+												<div><i>Blueprint node for making quest progress</i></div>
+											</div>
+										</div>
+									</div>
+
+									<h3>Nintendo Build</h3>
+									<div class="align-center">
+										<span><img src="/images/gameplay-programming/banana-cowboy/NintendoSwitch.jpg" /></span>
+										<div><i>As part of developing for the switch, I was delegated the task of ensuring builds worked on our Nintendo Dev Kit</i></div>
+									</div>
+						
+									<hr class="major" />
+									<h2>Creative and Design Contributions</h2>
+									<p>In additiona to my coding and design responsibilities, I would also contribute to the concept art and aesthetic design for the game. Here are some of the more notable artistic design concepts I contributed for the game.</p>
+									<h3>Robot Concept</h3>
+									<div class="align-center" style="margin-top: 4em;">
+										<div class="row">
+											<div class="col-6">
+												<span class="image fit"><img src="/images/gameplay-programming/banana-cowboy/Robot-Enemy-Concept.png"" alt="" /></span>
+												<div><i>My design for the robot enemy</i></div>
+											</div>
+											<div class="col-6">
+												<span class="image fit"><img src="/images/gameplay-programming/banana-cowboy/Robot-Modeled.gif" alt="" /></span>
+												<div><i>Robot modeled and textured in-game</i></div>
+											</div>
+										</div>
+									</div>
+									<h3>Ship Concept</h3>
+									<div class="align-center" style="margin-top: 4em;">
+										<div class="row">
+											<div class="col-6">
+												<span class="image fit"><img src="/images/gameplay-programming/banana-cowboy/Spaceship-Concept-Sketch.png" alt="" /></span>
+												<div><i>My design for Pickly Pete's Spaceship</i></div>
+											</div>
+											<div class="col-6">
+												<span class="image fit"><img src="/images/gameplay-programming/banana-cowboy/Pete-Ship.gif" alt="" /></span>
+												<div><i>Ship modeled and textured in-game</i></div>
+											</div>
+										</div>
+									</div>
+									<h3>UI Concept</h3>
+									<div class="align-center" style="margin-top: 4em;">
+										<div class="row">
+											<div class="col-6">
+												<span class="image fit"><img src="/images/gameplay-programming/banana-cowboy/Quest-UI-Layout.png" alt="" /></span>
+												<div><i>Design for the Inventory UI showcasing quests and collectables</i></div>
+											</div>
+											<div class="col-6">
+												<span class="image fit"><img src="/images/gameplay-programming/banana-cowboy/Main Menu Mockup.png" alt="" /></span>
+												<div><i>An earlier Main Menu mockup design</i></div>
+											</div>
+										</div>
+									</div>
+									<h3>Spacey Gas Canister</h3>
+									<div class="align-center" style="margin-top: 4em;">
+										<div class="row">
+											<div class="col-6">
+												<span class="image fit"><img src="/images/gameplay-programming/banana-cowboy/Gascan-Concept.png" alt="" /></span>
+												<div><i>My design for Space Nebula Can</i></div>
+											</div>
+											<div class="col-6">
+												<span class="image fit"><img src="/images/gameplay-programming/banana-cowboy/Gascan-Modeled.gif" alt="" /></span>
+												<div><i>Nebula can modeled and textured in-game</i></div>
+											</div>
+										</div>
+									</div>
+								</section>
+
+						</div>
+					</div>
+
+				<!-- Sidebar -->
+					<div id="sidebar" class="inactive">
+						<div class="inner">
+
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<h2>Menu</h2>
+									</header>
+									<ul>
+										<li><a href="/index.html">Homepage</a></li>
+										<li>
+											<span class="opener">Technical Art</span>
+											<ul>
+												<li><a href="/technical-art/inverse-kinematics.html">Inverse Kinematics</a></li>
+												<li><a href="/technical-art/water-ssr.html">Water Surface Shader</a></li>
+												<li><a href="/technical-art/npr-shader.html">Paintbrush Shader</a></li>
+												<li><a href="/technical-art/homepage.html">+ See All</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Gameplay Programming</span>
+											<ul>
+												<li><a href="/gameplay-programming/gas-unreal.html">Ability Combo System</a></li>
+												<li><a href="/gameplay-programming/banana-cowboy-refresh.html">Banana Cowboy: The Wild Bunch</a></li>
+												<li><a href="/gameplay-programming/banana-cowboy.html">Banana Cowboy</a></li>
+												<li><a href="/gameplay-programming/homepage.html">+ See All</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Assorted Code Projects</span>
+											<ul>
+												<li><a href="/code-projects/rpg-helper.html">RPG Helper</a></li>
+												<li><a href="/code-projects/homepage.html">+ See All</a></li>
+											</ul>
+										</li>
+										<li><a href="/portfolio/homepage.html">Creative Portfolio</a></li>
+										<li><a href="/contact.html">Contact</a></li>
+									</ul>
+								</nav>
+
+							<!-- Footer -->
+								<footer id="footer">
+									<p class="copyright">&copy; Landon Kump. All rights reserved.</p>
+									<p class="copyright">Demo Images: <a href="https://unsplash.com">Unsplash</a>. <br/>Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+								</footer>
+
+						</div>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="/assets/js/jquery.min.js"></script>
+			<script src="/assets/js/browser.min.js"></script>
+			<script src="/assets/js/breakpoints.min.js"></script>
+			<script src="/assets/js/util.js"></script>
+			<script src="/assets/js/main.js"></script>
+
+	</body>
+</html>
