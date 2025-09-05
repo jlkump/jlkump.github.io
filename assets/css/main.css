@@ -2322,3 +2322,9 @@ code a
 {
   color: #f45c5c;
 }
+
+.portfolio
+{
+  width: min(100%, 500px);
+  border-radius: 4px;
+}

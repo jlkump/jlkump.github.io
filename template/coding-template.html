@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 	<head>
-		<title>Technical Artist - Landon Kump</title>
+		<title>Programming - Landon Kump</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="/assets/css/main.css" />
@@ -17,7 +17,7 @@
 
 							<!-- Header -->
 								<header id="header">
-									<a href="/technical-art/homepage.html" class="logo"><strong>Landon Kump</strong> - Technical Artist</a>
+									<a href="/code-projects/homepage.html" class="logo"><strong>Landon Kump</strong> - Programming</a>
 									<ul class="icons">
 										<li><a href="https://github.com/jlkump" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
 										<li><a href="https://www.linkedin.com/in/jonathan-kump-a73b7722b/" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
@@ -25,50 +25,33 @@
 								</header>
 
 							<!-- Content -->
-								<section id="banner">
-									<div class="content">
-										<header>
-											<h1>Technical Art <br/>Projects</h1>
-										</header>
-										<p>These projects showcase my learning journey for anything graphics related for games and rendering. Each article will showcase the end result of the project as well as my workflow and process for achieving said result.</p>
-									</div>
-									<span class="image object">
-										<img src="/images/tech-art/waterflow/Reflective-spheres.png" alt="" />
-									</span>
-								</section>
-
-							<!-- Articles -->
 								<section>
-									<div class="row">
-										<div class="col-4 col-12-small align-center">
-											<a href="/technical-art/inverse-kinematics.html" class="thumbnail image"><img src="/images/tech-art/inverse-kinematics/ik-showcase.png" alt="" /></a>
-										</div>
-										<div class="col-8 col-12-small">
-											<h3>Inverse Kinematics</h3>
-											<p>An Inverse Kinematics system in Godot using <a href="https://docs.godotengine.org/en/stable/tutorials/scripting/gdextension/what_is_gdextension.html">GDExtension</a> which allows for various bone lengths, number of bones, and number of IK chains. Made using C++.</p>
-										</div>
-										<hr style="width: 100%;"/>
+									<header class="main">
+										<h1>Title of Project</h1>
+									</header>
+									
+									<p>Summary</p>
+
+									<!-- Showcase -->
+									<div class="align-center">
+										<iframe width="100%" height="400" class="video-showcase" src="https://www.youtube.com/embed/_AlnCiPDz30?si=wPz_pAeG36IL_nKE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="allowfullscreen"></iframe>
 									</div>
-									<div class="row">
-										<div class="col-4 col-12-small align-center">
-											<a href="/technical-art/water-ssr.html" class="thumbnail image"><img src="/images/tech-art/waterflow/Final-water-cube.png" alt="" /></a>
-										</div>
-										<div class="col-8 col-12-small">
-											<h3>Water Surface Shader</h3>
-											<p>Exploring a Screen-Space technique for rendering realistic water in real-time, covered in a <a href="https://developer.download.nvidia.com/presentations/2010/gdc/Direct3D_Effects.pdf">2010 GDC talk by Simon Green</a>. Made using OpenGL and C++.</p>
-										</div>
-										<hr style="width: 100%;"/>
-									</div>
-									<div class="row">
-										<div class="col-4 col-12-small align-center">
-											<a href="/technical-art/npr-shader.html" class="thumbnail image"><img src="/images/tech-art/npr-shader/Showcase.png" alt="" /></a>
-										</div>
-										<div class="col-8 col-12-small">
-											<h3>Paintbrush Shader</h3>
-											<p>Exploring NPR (Non-Photorealistic Rendering) techniques with a custom post process shader aiming to create the effect of brushstrokes on a model in realtime. Made using OpenGL and C++.</p>
-										</div>
-										<hr style="width: 100%;"/>
-									</div>
+
+									<hr class="major" />
+
+									<!-- Steps and sections -->
+									<h2>Setup</h2>
+									<p>This being one of my first major projects with OpenGL rather than webGL, I began first by learning OpenGL. For this I used the online resource <a href="http://opengl-tutorial.org">opengl-tutorial.org</a>, which I can highly recommend as it provides all the necessary basics you might need for getting started with any OpenGL project. Since there's a lot that goes into a build system (and since I didn't want to spend time debugging build problems), I used the CmakeLists and project structure provided by the tutorial website. In the end, this added a lot of bloat to my project structure, so for anyone begining with OpenGL, I recommend using this <a href="https://github.com/tgalaj/OpenGLSampleCmake?tab=readme-ov-file">skeleton code <i class="fa fa-github fa-2"></i></a> provided by Tomasz Galaj for setting up the build system for your own projects.</p>
+
+									
+									
+									<!-- References footer -->
+									<hr class="major" />
+									<h2>References</h2>
+									<ol class="ref">
+										<li><a id="ref-1" href="https://doi.org/10.1145/97880.97902">Paul Haeberli. 1990. <em>Paint by numbers: abstract image representations</em>. SIGGRAPH Comput. Graph. 24, 4 (Aug. 1990), 207-214.</a></li>
+									</ol>
+
 								</section>
 
 						</div>
